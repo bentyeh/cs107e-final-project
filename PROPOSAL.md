@@ -8,7 +8,7 @@ Team members and their responsibilities:
 	- Eric Cramer - Analog to Digital conversion for sensors, PWM library, Physical mockup of project
 
 Goal of the project:
-	The goal of the project is to make an electronic drumset using the raspberry pi and piezoelectric virbation sensors. We will also create a graphical representation that tracks drum hits on screen. 
+	The goal of the project is to make an electronic drumset using the raspberry pi and piezoelectric virbation sensors. We will also create a graphical representation that tracks drum hits on screen. The drum program will also be able to store a beat/rhythm and loop it.
 
 Milestone for T-1 week:
 	(1) Sensors are working and producing sound, static visuals.
