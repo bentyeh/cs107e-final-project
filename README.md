@@ -20,5 +20,4 @@ Milestone for T-1 week
 
 Resources needed
 	Piezoelectric vibration/knock sensors
-	Electro-luminescent wire (one color for each bongo)
-
+	Electro-luminescent wire (one color for each bongo/drum piece)
