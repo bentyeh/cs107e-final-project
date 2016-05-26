@@ -18,3 +18,4 @@ Resources needed:
 	- Piezoelectric vibration/knock sensors
 	- Electro-luminescent wire (one color for each bongo/drum piece)
 	- Analog to digital conversion for the piezo-discs
+	- Buttons, one for recording, one for playing back
