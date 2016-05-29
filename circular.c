@@ -4,7 +4,6 @@
 #include "printf.h"
 
 #define CAPACITY 128
-//static cir_t cir;
 
 
 struct cir {
