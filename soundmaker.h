@@ -11,6 +11,8 @@ Stores three integers:
 typedef volatile struct hit hit_t;
 
 void soundmaker_init(void);
+void soundmaker_record_beat();
+hit_t *soundmaker_replay_beat();
 
 
 #endif
