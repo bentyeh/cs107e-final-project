@@ -15,12 +15,14 @@ struct hit {
 /* Globals */
 static cir_t* cir;
 int stored_time;
+int first_beat_time;
 
 /*
  * initialize the sound maker
  */
 void soundmaker_init(void) {
 	stored_time = 0;
+	first_beat_time = 0;
 	cir = cir_new();
 
 }
@@ -71,6 +73,7 @@ hit_t *soundmaker_replay_beat(){
 int get_time_elapsed(){
 	int new_time = timer_get_time();
 	if(stored_time == 0){
+		first_beat_time = new_time;
 		return 0;
 	}
 	int elapsed_time = (new_time - stored_time);
@@ -93,4 +96,6 @@ int soundmaker_get_delay(int *hit1){
 	return *hit1.delay;
 }
 
+void soundmaker_vector(int pin){
 
+}
