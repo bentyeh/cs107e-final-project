@@ -24,7 +24,7 @@ LIBPI_STUDENT_MODULES = printf.o gpio.o timer.o fb.o malloc.o strtol.o minimath.
 
 # Reference library modules: edit to change which reference code is in libpi
 # These .o files are in ../cs107e.github.io/libpi/modules
-override LIBPI_REFERENCE_MODULES += register.o gpioextra.o uart.o memory.o reboot.o mailbox.o font.o vectors.o gpioevent.o interrupts.o armtimer.o #font.o 
+override LIBPI_REFERENCE_MODULES += register.o gpioextra.o uart.o memory.o reboot.o mailbox.o vectors.o gpioevent.o interrupts.o armtimer.o
 
 # The first target listed in the makefile is the default product built when
 # make is invoked with no argument. So if you type 'make', it'll try to
