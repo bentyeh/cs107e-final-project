@@ -29,3 +29,5 @@ static void setup_interrupts() {
     interrupts_enable(INTERRUPTS_GPIO3);
     system_enable_interrupts();
 }
+
+main_vector

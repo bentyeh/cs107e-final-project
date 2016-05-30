@@ -15,15 +15,15 @@
 void interrupt_vector(unsigned pc) {
 //if it isn't a button, then check the drums
   if(gpio_check_event(START)){
-  		soundmaker_vector(START);
+  		main_vector(START);
   }else if(gpio_check_event(STOP)){
-  		soundmaker_vector(STOP);
+  		main_vector(STOP);
   }else if(gpio_check_event(PLAY)){
-  		soundmaker_vector(PLAY);
+  		main_vector(PLAY);
   }else if(gpio_check_event(CLEAR)){
-  		soundmaker_vector(CLEAR);
+  		main_vector(CLEAR);
   }else{
-  		timer_vector(pc);
+  		soundmaker_vector(pc);
   }                                                                                                                  
 }
 

@@ -96,6 +96,14 @@ int soundmaker_get_delay(int *hit1){
 	return *hit1.delay;
 }
 
-void soundmaker_vector(int pin){
-
+//sensor_get_drum should return:	
+	// 1 for drum 1
+	// 2 for drum 2
+	// 3 for drum 3
+	// 4 for drum 4
+void soundmaker_vector(int pc){
+	int i = sensor_get_drum();
+	if(i){
+		soundmaker.set_frequency(i);	
+	}
 }
