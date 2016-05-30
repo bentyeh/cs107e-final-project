@@ -1,8 +1,10 @@
 #include "soundmaker.h"
 #include "circular.h"
+#include "armtimer.h"
 
 /* prototypes */
 int get_time_elapsed();
+void set_buttons(int button);
 
 
 /* hit structure */
@@ -21,6 +23,12 @@ int first_beat_time;
  * initialize the sound maker
  */
 void soundmaker_init(void) {
+  	
+
+  	set_buttons(START);
+  	set_buttons(STOP);
+  	set_buttons(PLAY);
+  	set_buttons(CLEAR);
 	stored_time = 0;
 	first_beat_time = 0;
 	cir = cir_new();
@@ -101,9 +109,17 @@ int soundmaker_get_delay(int *hit1){
 	// 2 for drum 2
 	// 3 for drum 3
 	// 4 for drum 4
-void soundmaker_vector(int pc){
+void soundmaker_vector(unsigned pc){
 	int i = sensor_get_drum();
 	if(i){
 		soundmaker.set_frequency(i);	
 	}
+	armtimer_clear_interrupt();
+}
+
+void set_buttons(int button){
+	gpio_set_function(button, GPIO_FUNC_INPUT); 
+  	gpio_set_pullup(button); 
+  	gpio_set_input(button);
+
 }
