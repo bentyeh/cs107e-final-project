@@ -8,13 +8,17 @@
 #include "gpio.h"
 #include "gpioextra.h"
 #include "gpioevent.h"
+#include "armtimer.h"
+
 
 static void setup_interrupts();
 
 void main(void) {
   gpio_init();
+  soundmaker_init();
+  armtimer_init();
+  armtimer_start(GPROF_TIMER_INTERVAL);
   setup_interrupts();
-
 
 }
 
@@ -25,3 +29,5 @@ static void setup_interrupts() {
     interrupts_enable(INTERRUPTS_GPIO3);
     system_enable_interrupts();
 }
+
+main_vector
