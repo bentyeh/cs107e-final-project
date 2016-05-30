@@ -17,7 +17,7 @@ static cir_t* cir;
 int stored_time;
 
 /*
- * initialize the soundmaker
+ * initialize the sound maker
  */
 void soundmaker_init(void) {
 	stored_time = 0;
@@ -77,3 +77,20 @@ int get_time_elapsed(){
 	stored_time = new_time;
 	return elapsed_time;
 }
+
+
+//these should probably go in another c file:::
+
+int soundmaker_get_frequency(int *hit1){
+	return *hit1.frequency;
+}
+
+int soundmaker_get_volume(int *hit1){
+	return *hit1.volume;
+}
+
+int soundmaker_get_delay(int *hit1){
+	return *hit1.delay;
+}
+
+
