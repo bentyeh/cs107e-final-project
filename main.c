@@ -12,6 +12,9 @@
 
 
 static void setup_interrupts();
+static int toggle_play;
+static int toggle_stop;
+
 
 void main(void) {
   gpio_init();
@@ -19,6 +22,15 @@ void main(void) {
   armtimer_init();
   armtimer_start(GPROF_TIMER_INTERVAL);
   setup_interrupts();
+  while(1){
+  	if(toggle_play){
+  		//go through playing circular buffer (dequeue and requeue)
+  	}
+  	if(toggle_stop){
+  		//stop playing the circular buffer
+  	}
+  
+  }
 
 }
 
@@ -42,13 +54,37 @@ void main_vector(unsigned pc){
 //it needs to toggle things that are in a larger while loop that when checked 
 //change what is currently happening in the program
   if(pc == (START)){
-  	 //initialize a new circular buffer
+  	//initialize a new circular buffer
+  	cir = cir_new();
   	 //turn on the recording of interrupts
+  	 
   }else if(pc == (STOP)){
   	//stop the recording of interrupts
+  	main_toggle_stop();
   }else if(pc == (PLAY)){
-  	//cycle through the circular queue	
+  	//cycle through the circular queue
+  	main_toggle_play();	
   }else if(pc == (CLEAR)){
   	//set all values in the circular queue to zero
+  	cir_clear(cir);
 
+}
+
+
+/*toggles so that we know if the circular buffer should be outputting the sound */
+void main_toggle_play(){
+	if(toggle_play == 0){
+		toggle_play = 1;
+	}else{
+		toggle_play = 0;
+	}
+}
+
+/*toggles so that we know if we should stop the circular buffer from cycling */
+void main_toggle_stop(){
+	if(toggle_stop == 0){
+		toggle_stop = 1;
+	}else{
+		toggle_stop = 0;
+	}
 }

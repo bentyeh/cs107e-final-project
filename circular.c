@@ -105,3 +105,15 @@ int cir_dequeue(cir_t *cir) {
 // 	
 	return return_val;
 }
+
+void cir_clear(cir_t *cir){
+	while(!cir_empty()){
+		int deq = cir_dequeue(cir);
+		//now we get the memory location of the struct
+		//set the frequency, volume, and delay to be zero
+		*deq->frequency = 0;
+		*deq->volume = 0;
+		*deq->delay = 0;
+	}
+		
+}

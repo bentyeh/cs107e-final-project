@@ -37,4 +37,8 @@ void cir_enqueue(cir_t *cir, int elem);
 // until one is enqueued, then returns it
 int cir_dequeue(cir_t *cir);
 
+
+//Clears the circular buffer by setting all the values equal to zero
+void cir_clear(cir_t *cir);
+
 #endif
