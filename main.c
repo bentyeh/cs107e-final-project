@@ -10,11 +10,15 @@
 #include "gpioevent.h"
 #include "armtimer.h"
 
-
+/* globals*/
 static void setup_interrupts();
-static int toggle_play;
-static int toggle_stop;
+int toggle_play = 0;
+int toggle_stop = 0;
+static int toggle_clear = 0;
+static int beat_delay = 0;
 
+/*prototypes*/
+void main_cycle_sound();
 
 void main(void) {
   gpio_init();
@@ -29,9 +33,29 @@ void main(void) {
   	if(toggle_stop){
   		//stop playing the circular buffer
   	}
-  
+  	if(toggle_clear){
+  		soundmaker_clear_cir();
+  		toggle_clear = 0;
+  		toggle_play = 0;
+  	}
+  	while(delay(beat_delay)){
+  	//update the gl
+	
+	}
   }
 
+}
+
+/*this changes the delay of the beat_delay according to what the delay from the 
+dequeue is. 
+it dequeues a value, then it plays the sets the beat to be played after its delay
+is completed, then it will requeue the beat when it is done */
+void main_cycle_sound(){
+	int *hit1_ptr = soundmaker_replay_beat();
+	beat_delay = soundmaker_get_delay(hit1_ptr);
+	//pass the pwm output the volume and frequency
+	pwm.play_sound(soundmaker_get_volume(hit1_ptr), soundmaker_get_frequency(hit1_ptr));
+	
 }
 
 
@@ -55,36 +79,52 @@ void main_vector(unsigned pc){
 //change what is currently happening in the program
   if(pc == (START)){
   	//initialize a new circular buffer
-  	cir = cir_new();
+  	 soundmaker_new_cir();
   	 //turn on the recording of interrupts
-  	 
+  	 gpio_check_and_clear_event(START);
   }else if(pc == (STOP)){
   	//stop the recording of interrupts
-  	main_toggle_stop();
+  	//main_toggle_stop();
+  	toggle_stop = 1;
+  	gpio_check_and_clear_event(STOP);
   }else if(pc == (PLAY)){
   	//cycle through the circular queue
-  	main_toggle_play();	
+  	//main_toggle_play();
+  	toggle_play = 1;	
+  	gpio_check_and_clear_event(PLAY);
   }else if(pc == (CLEAR)){
   	//set all values in the circular queue to zero
-  	cir_clear(cir);
-
+  	//main_toggle_clear();
+  	toggle_clear = 1;
+  	gpio_check_and_clear_event(CLEAR);
+  }
+  
 }
 
 
 /*toggles so that we know if the circular buffer should be outputting the sound */
-void main_toggle_play(){
-	if(toggle_play == 0){
-		toggle_play = 1;
-	}else{
-		toggle_play = 0;
-	}
-}
+// void main_toggle_play(){
+// 	if(toggle_play == 0){
+// 		toggle_play = 1;
+// 	}else{
+// 		toggle_play = 0;
+// 	}
+// }
 
-/*toggles so that we know if we should stop the circular buffer from cycling */
-void main_toggle_stop(){
-	if(toggle_stop == 0){
-		toggle_stop = 1;
-	}else{
-		toggle_stop = 0;
-	}
-}
+/* toggles so that we know if we should stop the circular buffer from cycling */
+// void main_toggle_stop(){
+// 	if(toggle_stop == 0){
+// 		toggle_stop = 1;
+// 	}else{
+// 		toggle_stop = 0;
+// 	}
+// }
+
+/*toggles so that we clear the circular buffer*/
+// void main_toggle_clear(){
+// 		if(toggle_clear == 0){
+// 		toggle_clear = 1;
+// 	}else{
+// 		toggle_clear = 0;
+// 	}
+// }

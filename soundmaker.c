@@ -15,9 +15,12 @@ struct hit {
 };
 
 /* Globals */
-static cir_t* cir;
-int stored_time;
-int first_beat_time;
+cir_t* cir;
+static int stored_time;
+static int first_beat_time;
+
+extern toggle_play; //can i get this from main?
+extern toggle_stop; //can i get this from main?
 
 /*
  * initialize the sound maker
@@ -32,6 +35,7 @@ void soundmaker_init(void) {
 	stored_time = 0;
 	first_beat_time = 0;
 	cir = cir_new();
+	cur_frequency = 0;
 
 }
 
@@ -40,12 +44,12 @@ void soundmaker_init(void) {
 *** probably should be called by the interrupt handler
 */
 
-soundmaker_record_beat(){
+soundmaker_record_beat(int i){
 	//make new hit and enqueue it
 	
 	struct hit hit1;
 	
-	hit1.frequency = pwm.get_frequency_input();
+	hit1.frequency = i;
 	hit1.volume = pwm.get_volume_input();
 	hit1.time_elapsed = get_time_elapsed();
 	
@@ -58,20 +62,15 @@ soundmaker_record_beat(){
 }
 
 /*
-* returns a pointer to the hit in the circular queue
+* returns  the hit in the circular queue
 */
 
 hit_t *soundmaker_replay_beat(){
-// 	int *hit1_ptr = cir.dequeue();
-// 	struct hit hit1;
-// 	hit1 = *hit1_ptr;
-	return cir.dequeue();
+	int hptr = cir.dequeue();
+	cir_enqueue(hptr);
+	return hptr;
 
 }
-//for output functions how do you want the information parsed?
-//make the makefile now
-
-
 
 
 /*
@@ -90,18 +89,20 @@ int get_time_elapsed(){
 }
 
 
-//these should probably go in another c file:::
 
+//getter functions for main
 int soundmaker_get_frequency(int *hit1){
-	return *hit1.frequency;
+	return *hit1->frequency;
 }
 
+//getter functions for main
 int soundmaker_get_volume(int *hit1){
-	return *hit1.volume;
+	return *hit1->volume;
 }
 
+//getter functions for main
 int soundmaker_get_delay(int *hit1){
-	return *hit1.delay;
+	return *hit1->delay;
 }
 
 //sensor_get_drum should return:	
@@ -110,9 +111,10 @@ int soundmaker_get_delay(int *hit1){
 	// 3 for drum 3
 	// 4 for drum 4
 void soundmaker_vector(unsigned pc){
-	int i = sensor_get_drum();
-	if(i){
-		soundmaker.set_frequency(i);	
+	int i = pwm.sensor_get_drum();
+	if(i){	
+		if(!toggle_stop)
+			soundmaker_record_beat(i);
 	}
 	armtimer_clear_interrupt();
 }
@@ -122,4 +124,12 @@ void set_buttons(int button){
   	gpio_set_pullup(button); 
   	gpio_set_input(button);
 
+}
+
+void soundmaker_new_cir(){
+	cir = cir_new();
+}
+
+void soundmaker_clear_cir(){
+	cir_clear(cir);
 }
