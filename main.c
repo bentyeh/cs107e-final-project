@@ -52,6 +52,9 @@ it dequeues a value, then it plays the sets the beat to be played after its dela
 is completed, then it will requeue the beat when it is done */
 void main_cycle_sound(){
 	int *hit1_ptr = soundmaker_replay_beat();
+		if(hit1_ptr == 0){
+			printf("the queue was empty\n");
+		}
 	beat_delay = soundmaker_get_delay(hit1_ptr);
 	//pass the pwm output the volume and frequency
 	pwm.play_sound(soundmaker_get_volume(hit1_ptr), soundmaker_get_frequency(hit1_ptr));

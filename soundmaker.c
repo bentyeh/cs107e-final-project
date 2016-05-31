@@ -66,6 +66,9 @@ soundmaker_record_beat(int i){
 */
 
 hit_t *soundmaker_replay_beat(){
+	if(cir_empty(cir)){
+		return 0;
+	}
 	int hptr = cir.dequeue();
 	cir_enqueue(hptr);
 	return hptr;
@@ -115,6 +118,7 @@ void soundmaker_vector(unsigned pc){
 	if(i){	
 		if(!toggle_stop)
 			soundmaker_record_beat(i);
+			//also we should playback the sound on the initial hit
 	}
 	armtimer_clear_interrupt();
 }
