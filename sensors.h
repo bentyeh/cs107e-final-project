@@ -8,7 +8,13 @@
  * Date: May 29, 2016
  */
 
- void sensors_init(void);
+void sensors_init(void);
+
+typedef struct sensor_t{
+	unsigned int sensor_number;
+	unsigned int volume;
+
+} sensor_t;
 
 enum{
 	SENSOR_PIN_FIRST = 5;
@@ -20,8 +26,6 @@ enum{
 	SENSOR_PIN_LAST = 26;
 }
 
-int sensors_get_sensor_number(void);
-
-
+sensor_t sensors_read_value(void);
 
 #endif
