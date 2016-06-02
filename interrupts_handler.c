@@ -26,7 +26,7 @@ void interrupt_vector(unsigned pc) {
   }else{
   	//its a drum!!!
   	//this is a timer interrupt
-  		soundmaker_vector(pc);
+  		//soundmaker_vector(pc);
   }                                                                                                                  
 }
 

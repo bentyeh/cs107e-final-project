@@ -27,8 +27,18 @@ static int beat_delay = 0;
 void main_cycle_sound();
 
 void main(void) {
+  delay(2);
   audio_init();
-  audio_send_tone(WAVE_SAW, 1000);
+//  for(int i = 0; i < 3; i++){
+	while(1){
+  	int val = sensors_read_value(0);
+//   	if(val > 0){
+//   		audio_send_tone(WAVE_SINE, 1000);
+//   	
+//   		audio_send_tone(WAVE_SINE, 0);
+//   	}
+  	printf("val: %d\n", val);
+  }
   /*gpio_init();
   soundmaker_init();
   armtimer_init();
@@ -59,13 +69,13 @@ dequeue is.
 it dequeues a value, then it plays the sets the beat to be played after its delay
 is completed, then it will requeue the beat when it is done */
 void main_cycle_sound(){
-	int *hit1_ptr = soundmaker_replay_beat();
-		if(hit1_ptr == 0){
-			printf("the queue was empty\n");
-		}
-	beat_delay = soundmaker_get_delay(hit1_ptr);
-		//pass the pwm output the volume and frequency
-	//pwm.play_sound(soundmaker_get_volume(hit1_ptr), soundmaker_get_frequency(hit1_ptr));
+	// int *hit1_ptr = soundmaker_replay_beat();
+// 		if(hit1_ptr == 0){
+// 			printf("the queue was empty\n");
+// 		}
+// 	beat_delay = soundmaker_get_delay(hit1_ptr);
+// 		//pass the pwm output the volume and frequency
+// 	//pwm.play_sound(soundmaker_get_volume(hit1_ptr), soundmaker_get_frequency(hit1_ptr));
 	
 }
 
@@ -88,28 +98,28 @@ void main_vector(unsigned pc){
 //none of the functionality specified here should actually occur in the handler
 //it needs to toggle things that are in a larger while loop that when checked 
 //change what is currently happening in the program
-  if(pc == (START)){
-  	//initialize a new circular buffer
-  	 soundmaker_new_cir();
-  	 //turn on the recording of interrupts
-  	 gpio_check_and_clear_event(START);
-  }else if(pc == (STOP)){
-  	//stop the recording of interrupts
-  	//main_toggle_stop();
-  	toggle_stop = 1;
-  	gpio_check_and_clear_event(STOP);
-  }else if(pc == (PLAY)){
-  	//cycle through the circular queue
-  	//main_toggle_play();
-  	toggle_play = 1;	
-  	gpio_check_and_clear_event(PLAY);
-  }else if(pc == (CLEAR)){
-  	//set all values in the circular queue to zero
-  	//main_toggle_clear();
-  	toggle_clear = 1;
-  	gpio_check_and_clear_event(CLEAR);
-  }
-  
+//   if(pc == (START)){
+//   	initialize a new circular buffer
+//   	 soundmaker_new_cir();
+//   	 turn on the recording of interrupts
+//   	 gpio_check_and_clear_event(START);
+//   }else if(pc == (STOP)){
+//   	stop the recording of interrupts
+//   	main_toggle_stop();
+//   	toggle_stop = 1;
+//   	gpio_check_and_clear_event(STOP);
+//   }else if(pc == (PLAY)){
+//   	cycle through the circular queue
+//   	main_toggle_play();
+//   	toggle_play = 1;	
+//   	gpio_check_and_clear_event(PLAY);
+//   }else if(pc == (CLEAR)){
+//   	set all values in the circular queue to zero
+//   	main_toggle_clear();
+//   	toggle_clear = 1;
+//   	gpio_check_and_clear_event(CLEAR);
+//   }
+//   
 }
 
 
