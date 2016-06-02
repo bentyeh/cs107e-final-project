@@ -57,3 +57,10 @@ double rfpart(double x) {
 	}
     return -1 - fpart(x);
 }
+
+unsigned min_u(unsigned x, unsigned y) {
+	if (x > y) {
+		return y;
+	}
+	return x;
+}
