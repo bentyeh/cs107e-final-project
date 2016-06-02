@@ -276,7 +276,7 @@ void audio_send_1kHz() {
 }
 
 /* Defines for the frequencies of different drums */
-#define TOM_FREQ
+#define TOM_FREQ 
 #define CYMBAL_FREQ
 #define KICK_FREQ
 #define BONGO_FREQ
