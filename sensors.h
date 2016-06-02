@@ -24,7 +24,7 @@ enum{
 	SENSOR_PIN4 = 19;
 	SENSOR_PIN5 = 26;
 	SENSOR_PIN_LAST = 26;
-}
+};
 
 unsigned char sensors_read_value(void);
 
