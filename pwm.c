@@ -127,6 +127,8 @@ unsigned int audio_set_clock(unsigned int frequency) {
 
 This is a generic send tone function that allows the caller to indicate
 the wave shape and the frequency
+
+TODO: Add a parameter 
 */
 
 
