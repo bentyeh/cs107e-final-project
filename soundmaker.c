@@ -1,6 +1,14 @@
 #include "soundmaker.h"
 #include "circular.h"
 #include "armtimer.h"
+#include "gpio.h"
+
+
+#define START GPIO_PIN20
+#define STOP GPIO_PIN21
+#define PLAY GPIO_PIN22
+#define CLEAR GPIO_PIN23
+
 
 /* prototypes */
 int get_time_elapsed();
