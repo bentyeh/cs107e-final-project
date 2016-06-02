@@ -21,7 +21,9 @@ static int beat_delay = 0;
 void main_cycle_sound();
 
 void main(void) {
-  gpio_init();
+  audio_init();
+  audio_send_tone(WAVE_SAW, 1000);
+  /*gpio_init();
   soundmaker_init();
   armtimer_init();
   armtimer_start(GPROF_TIMER_INTERVAL);
@@ -43,7 +45,7 @@ void main(void) {
 	
 	}
   }
-
+*/
 }
 
 /*this changes the delay of the beat_delay according to what the delay from the 
