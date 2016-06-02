@@ -276,39 +276,39 @@ void audio_send_1kHz() {
 }
 
 /* Defines for the frequencies of different drums */
-#define TOM_FREQ 
-#define CYMBAL_FREQ
-#define KICK_FREQ
-#define BONGO_FREQ
-#define CONGA_FREQ
-#define HIGH_HAT_FREQ
+// #define TOM_FREQ 
+// #define CYMBAL_FREQ
+// #define KICK_FREQ
+// #define BONGO_FREQ
+// #define CONGA_FREQ
+// #define HIGH_HAT_FREQ
 
-/* Sends the audio tone for a tom drum */
-void audio_send_tom(){
-	audio_send_tone(WAVE_SINE, TOM_FREQ );
-}
+// /* Sends the audio tone for a tom drum */
+// void audio_send_tom(){
+// 	audio_send_tone(WAVE_SINE, TOM_FREQ );
+// }
 
-/* Sends the audio tone for a cymbal */
-void audio_send_cymbal(){
-	audio_send_tone(WAVE_SINE, CYMBAL_FREQ );
-}
+// /* Sends the audio tone for a cymbal */
+// void audio_send_cymbal(){
+// 	audio_send_tone(WAVE_SINE, CYMBAL_FREQ );
+// }
 
-/* Sends the audio tone for a kick drum */
-void audio_send_kick(){
-	audio_send_tone(WAVE_SINE, KICK_FREQ );
-}
+// /* Sends the audio tone for a kick drum */
+// void audio_send_kick(){
+// 	audio_send_tone(WAVE_SINE, KICK_FREQ );
+// }
 
-/*Sends the audio tone for a bongo drum */
-void audio_send_bongo(){
-	audio_send_tone(WAVE_SINE, BONGO_FREQ );
-}
+// /*Sends the audio tone for a bongo drum */
+// void audio_send_bongo(){
+// 	audio_send_tone(WAVE_SINE, BONGO_FREQ );
+// }
 
-/* Sends the audio tone for a conga drum */
-void audio_send_conga(){
-	audio_send_tone(WAVE_SINE, CONGA_FREQ );
-}
+// /* Sends the audio tone for a conga drum */
+// void audio_send_conga(){
+// 	audio_send_tone(WAVE_SINE, CONGA_FREQ );
+// }
 
-/* Sends the audio tone for a high-hat */
-void audio_send_high_hat(){
-	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ );
-}
+// /* Sends the audio tone for a high-hat */
+// void audio_send_high_hat(){
+// 	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ );
+// }
