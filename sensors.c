@@ -27,7 +27,6 @@ int sensors_read_value(unsigned int channel){
 	instruction[1] = 1 << 4;
 	if(!channel){
 		//channel is 0, do nothing
-		continue;
 	}else if(channel > 7){
 		//channel does not exist
 		return -1; //return -1 to indicate error
