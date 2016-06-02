@@ -21,16 +21,15 @@ void sensors_init(void){
 * For the RPi bongos, the channel number corresponds to the drum number
 *
 */
-unsigned int sensors_read_value(unsigned int channel){
+int sensors_read_value(unsigned int channel){
 	unsigned char instruction[3] = {1,0,0};
 	//unsigned char instruction = 0b0; //create the instruction byte
 	instruction[1] = 1 << 4;
 	if(!channel){
 		//channel is 0, do nothing
-		continue;
 	}else if(channel > 7){
 		//channel does not exist
-		return (char) -1; //return -1 to indicate error
+		return -1; //return -1 to indicate error
 	}else{
 		//channel exists, bitshift a one into the SPI instruction
 		set_instruction(channel, instruction[1]);
@@ -39,7 +38,7 @@ unsigned int sensors_read_value(unsigned int channel){
 	instruction[1] = instruction[1] << 4; //bit shift the instruction into the upper 4 bits
 	//Execute the instruction to the slave (a to d)
 	spi_transfer(instruction, values, 3); //len is 3 b/c sending and receiving 3 bytes
-	unsigned int value = values[1] << 8; //need to capture 10 bits from the MCP3008
+	int value = values[1] << 8; //need to capture 10 bits from the MCP3008
 	value |= values[3];
 	return value;
 }
