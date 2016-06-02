@@ -26,6 +26,6 @@ enum{
 	SENSOR_PIN_LAST = 26,
 };
 
-unsigned char sensors_read_value(unsigned int channel);
+int sensors_read_value(unsigned int channel);
 
 #endif
