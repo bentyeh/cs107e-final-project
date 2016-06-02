@@ -7,17 +7,21 @@
 static unsigned *drum_array; // array of x-values of centers of drums
 static unsigned drum_diameter;
 static unsigned num_drums;
+static unsigned gl_width;
+static unsigned gl_height;
 const color RESTING_COLOR = GL_BLUE;
 const color BEAT_COLOR = GL_RED;
 
-void drumimage_init(unsigned gl_width, unsigned gl_height, unsigned num) {
+void drumimage_init(unsigned width, unsigned height, unsigned num) {
     unsigned i;
 
-    gl_init(gl_width, gl_height, GL_DOUBLEBUFFER);
+    gl_width = width;
+    gl_height = height;
     num_drums = num;
     drum_diameter = min_u(gl_width / (2*num + 1), gl_height);
-    
     drum_array = malloc(num_drums * sizeof(unsigned));
+
+    gl_init(gl_width, gl_height, GL_DOUBLEBUFFER);
     for(i = 0; i<num_drums; i++) {
         *(drum_array+i) = (2*i+1) * gl_width / (2*num_drums + 1) + drum_diameter/2;
     }

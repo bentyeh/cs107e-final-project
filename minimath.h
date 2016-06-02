@@ -13,4 +13,6 @@ int ceil(double x);
 double fpart(double x);
 double rfpart(double x);
 
+unsigned min_u(unsigned x, unsigned y);
+
 #endif
