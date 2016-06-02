@@ -123,6 +123,10 @@ unsigned int audio_set_clock(unsigned int frequency) {
    of the wave is quantized to 64 values and the Y axis is
    quantized to 128 values).
 
+**For the RPi bongos, the waveform or wave type should always be sine
+
+This is a generic send tone function that allows the caller to indicate
+the wave shape and the frequency
 */
 
 
@@ -266,8 +270,45 @@ unsigned waveform_sine[] = {32,
                        32
 };
 
-
+//test tone function
 void audio_send_1kHz() {
   audio_send_tone(WAVE_SINE, 1000);
 }
 
+/* Defines for the frequencies of different drums */
+#define TOM_FREQ
+#define CYMBAL_FREQ
+#define KICK_FREQ
+#define BONGO_FREQ
+#define CONGA_FREQ
+#define HIGH_HAT_FREQ
+
+/* Sends the audio tone for a tom drum */
+void audio_send_tom(){
+	audio_send_tone(WAVE_SINE, TOM_FREQ );
+}
+
+/* Sends the audio tone for a cymbal */
+void audio_send_cymbal(){
+	audio_send_tone(WAVE_SINE, CYMBAL_FREQ );
+}
+
+/* Sends the audio tone for a kick drum */
+void audio_send_kick(){
+	audio_send_tone(WAVE_SINE, KICK_FREQ );
+}
+
+/*Sends the audio tone for a bongo drum */
+void audio_send_bongo(){
+	audio_send_tone(WAVE_SINE, BONGO_FREQ );
+}
+
+/* Sends the audio tone for a conga drum */
+void audio_send_conga(){
+	audio_send_tone(WAVE_SINE, CONGA_FREQ );
+}
+
+/* Sends the audio tone for a high-hat */
+void audio_send_high_hat(){
+	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ );
+}
