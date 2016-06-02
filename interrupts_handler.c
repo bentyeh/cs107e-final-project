@@ -15,19 +15,19 @@
 
 void interrupt_vector(unsigned pc) {
 //if it isn't a button, then check the drums
-  if(gpio_check_event(START)){
-  		main_vector(START);
-  }else if(gpio_check_event(STOP)){
-  		main_vector(STOP);
-  }else if(gpio_check_event(PLAY)){
-  		main_vector(PLAY);
-  }else if(gpio_check_event(CLEAR)){
-  		main_vector(CLEAR);
-  }else{
-  	//its a drum!!!
-  	//this is a timer interrupt
-  		soundmaker_vector(pc);
-  }                                                                                                                  
+  // if(gpio_check_event(START)){
+  // 		main_vector(START);
+  // }else if(gpio_check_event(STOP)){
+  // 		main_vector(STOP);
+  // }else if(gpio_check_event(PLAY)){
+  // 		main_vector(PLAY);
+  // }else if(gpio_check_event(CLEAR)){
+  // 		main_vector(CLEAR);
+  // }else{
+  // 	//its a drum!!!
+  // 	//this is a timer interrupt
+  // 		soundmaker_vector(pc);
+  // }                                                                                                                  
 }
 
 // The rest of these should never be called
