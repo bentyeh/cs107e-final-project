@@ -24,7 +24,7 @@ void sensors_init(void){
 int sensors_read_value(unsigned int channel){
 	unsigned char instruction[3] = {1,0,0};
 	//unsigned char instruction = 0b0; //create the instruction byte
-	instruction[1] = 1 << 4;
+	instruction[1] = 1 << 3;
 	if(!channel){
 		//channel is 0, do nothing
 	}else if(channel > 7){
