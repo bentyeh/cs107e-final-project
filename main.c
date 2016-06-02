@@ -10,6 +10,12 @@
 #include "gpioevent.h"
 #include "armtimer.h"
 
+
+#define START GPIO_PIN20
+#define STOP GPIO_PIN21
+#define PLAY GPIO_PIN22
+#define CLEAR GPIO_PIN23
+
 /* globals*/
 static void setup_interrupts();
 int toggle_play = 0;
@@ -58,8 +64,8 @@ void main_cycle_sound(){
 			printf("the queue was empty\n");
 		}
 	beat_delay = soundmaker_get_delay(hit1_ptr);
-	//pass the pwm output the volume and frequency
-	pwm.play_sound(soundmaker_get_volume(hit1_ptr), soundmaker_get_frequency(hit1_ptr));
+		//pass the pwm output the volume and frequency
+	//pwm.play_sound(soundmaker_get_volume(hit1_ptr), soundmaker_get_frequency(hit1_ptr));
 	
 }
 
