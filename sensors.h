@@ -17,13 +17,13 @@ typedef struct sensor_t{
 } sensor_t;
 
 enum{
-	SENSOR_PIN_FIRST = 5;
-	SENSOR_PIN1 = 5;
-	SENSOR_PIN2 = 6;
-	SENSOR_PIN3 = 13;
-	SENSOR_PIN4 = 19;
-	SENSOR_PIN5 = 26;
-	SENSOR_PIN_LAST = 26;
+	SENSOR_PIN_FIRST = 5,
+	SENSOR_PIN1 = 5,
+	SENSOR_PIN2 = 6,
+	SENSOR_PIN3 = 13,
+	SENSOR_PIN4 = 19,
+	SENSOR_PIN5 = 26,
+	SENSOR_PIN_LAST = 26,
 };
 
 unsigned char sensors_read_value(void);
