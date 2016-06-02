@@ -10,4 +10,5 @@
 *.bin.extra
 *.a
 *.exe
-*.DS_Store
+.DS_Store
+libpi.a
