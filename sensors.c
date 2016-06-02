@@ -39,7 +39,7 @@ int sensors_read_value(unsigned int channel){
 	//Execute the instruction to the slave (a to d)
 	spi_transfer(instruction, values, 3); //len is 3 b/c sending and receiving 3 bytes
 	int value = values[1] << 8; //need to capture 10 bits from the MCP3008
-	value |= values[3];
+	value |= values[2];
 	return value;
 }
 
