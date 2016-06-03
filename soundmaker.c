@@ -7,6 +7,7 @@
 #include "gpioextra.h"
 #include "gpioevent.h"
 #include "sensors.h" 
+#include "tone.h"
 
 
 #define START GPIO_PIN20
@@ -49,7 +50,6 @@ extern int toggle_stop; //can i get this from main?
  */
 void soundmaker_init(void) {
   	
-
   	set_buttons(START);
   	set_buttons(STOP);
   	set_buttons(PLAY);
@@ -68,7 +68,7 @@ void soundmaker_init(void) {
 void soundmaker_record_beat(int drum, int i){
 	//make new hit and enqueue it
 	
-	struct hit hit1;
+	hit_t hit1;
 	
 	hit1.frequency = drum;
 	hit1.volume = i;  	//WHAT IS THE VOLUME INPUT HERE?
@@ -76,9 +76,9 @@ void soundmaker_record_beat(int drum, int i){
 	
 	//store the pointer to the struct in the circular queue
 	
-	struct hit *hit1_ptr = &hit1;
+	//struct hit *hit1_ptr = &hit1;
 	
-	cir_enqueue(cir, hit1_ptr);
+	cir_enqueue(cir, hit1);
 
 }
 
@@ -86,13 +86,13 @@ void soundmaker_record_beat(int drum, int i){
 * returns  the hit in the circular queue
 */
 
-hit_t *soundmaker_replay_beat(){
+volatile hit_t soundmaker_replay_beat(){
 	if(cir_empty(cir)){
-		return 0;
+		// return 0;
 	}
-	volatile struct hit *hptr = cir_dequeue(cir);
-	cir_enqueue(cir, hptr);
-	return hptr;
+	hit_t hit2 = cir_dequeue(cir);
+	cir_enqueue(cir, hit2);
+	return hit2;
 
 }
 
@@ -115,23 +115,20 @@ int get_time_elapsed(){
 
 
 //getter functions for main
-int soundmaker_get_frequency(struct hit *hit1){
-	struct hit hit2 = *hit1;
-	int i = hit2.frequency;
+int soundmaker_get_frequency(hit_t hit1){
+	int i = hit1.frequency;
 	return i;
 }
 
 //getter functions for main
-int soundmaker_get_volume(struct hit *hit1){
-	struct hit hit2 = *hit1;
-	int i = hit2.volume;
+int soundmaker_get_volume(hit_t hit1){
+	int i = hit1.volume;
 	return i;
 }
 
 //getter functions for main
-int soundmaker_get_delay(struct hit *hit1){
-	struct hit hit2 = *hit1;
-	int i = hit2.time_elapsed;
+int soundmaker_get_delay(hit_t hit1){
+	int i = hit1.time_elapsed;
 	return i;
 }
 
@@ -167,7 +164,8 @@ void soundmaker_vector(unsigned pc){
 // 	}
 	if(i){	
 		//play back beat without storing it
-		audio_send_tone(WAVE_SINE, drum, i);
+		//audio_send_tone(WAVE_SINE, drum, i);
+		tone(drum);
 		if(!toggle_stop)
 			soundmaker_record_beat(drum, i);
 			//also we should playback the sound on the initial hit
