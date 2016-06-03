@@ -8,7 +8,7 @@
 
 /*cir structure*/
 struct cir {
-    int buf[CAPACITY];
+    int* buf[CAPACITY];
     unsigned head;
     unsigned tail;
 }; 
@@ -69,7 +69,7 @@ void cir_enqueue(cir_t *cir, struct hit* x) {
 // 	 printf("error buffer is full\n");
 	}else{
 
-	cir->buf[(cir->tail)%CAPACITY] = x;
+	cir->buf[(cir->tail)%CAPACITY] = (int*)x;
 	cir->tail = cir->tail + 1;
 	
 // 	printf("inserting at: %d\n", (cir->tail) % CAPACITY);
@@ -90,7 +90,7 @@ hit_t *cir_dequeue(cir_t *cir) {
 		//spin
 	}
 	
-	struct hit* return_val = cir->buf[(cir->head)%CAPACITY];
+	struct hit* return_val = (struct hit*)cir->buf[(cir->head)%CAPACITY];
 	cir->head = (cir->head) + 1;
 // 	if(cir.head == cir.tail){
 // 		//IF THE BUFFER HAS BEEN EMPTIED RESET TO ZERO
