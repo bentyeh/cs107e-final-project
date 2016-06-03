@@ -9,7 +9,8 @@
 #include "gpioextra.h"
 #include "gpioevent.h"
 #include "armtimer.h"
-
+#include "audio.h"
+#include "tone.h"
 
 #define START GPIO_PIN20
 #define STOP GPIO_PIN21
@@ -53,6 +54,9 @@ void main(void) {
 //   	//update the gl
 // 	
 // 	}
+gpio_set_function(PWM_0, GPIO_FUNC_ALT0);
+gpio_set_function(PWM_1, GPIO_FUNC_ALT0);
+tone(120);
 printf("value: %d\n", value);
 }
 	
