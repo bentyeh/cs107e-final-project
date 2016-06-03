@@ -48,13 +48,13 @@ void main(void) {
   		toggle_clear = 0;
   		toggle_play = 0;
   	}
-  	while(delay(beat_delay)){
+  	//while(delay(beat_delay)){
   	//update the gl
 	
 	}
-  }
-*/
 }
+
+
 
 /*this changes the delay of the beat_delay according to what the delay from the 
 dequeue is. 
