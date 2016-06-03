@@ -24,6 +24,8 @@ int toggle_stop = 1;
 static int toggle_clear = 0;
 static int beat_delay = 0;
 
+extern int value;
+
 /*prototypes*/
 void main_cycle_sound();
 
@@ -36,22 +38,24 @@ void main(void) {
   armtimer_start(GPROF_TIMER_INTERVAL);
   setup_interrupts();
   while(1){
-  	if(toggle_play){
-  		//go through playing circular buffer (dequeue and requeue)
-  	}
-  	if(toggle_stop){
-  		//stop playing the circular buffer
-  	}
-  	if(toggle_clear){
-  		soundmaker_clear_cir();
-  		toggle_clear = 0;
-  		toggle_play = 0;
-  	}
-  	//while(delay(beat_delay)){
-  	//update the gl
+//   	if(toggle_play){
+//   		//go through playing circular buffer (dequeue and requeue)
+//   	}
+//   	if(toggle_stop){
+//   		//stop playing the circular buffer
+//   	}
+//   	if(toggle_clear){
+//   		soundmaker_clear_cir();
+//   		toggle_clear = 0;
+//   		toggle_play = 0;
+//   	}
+//   	//while(delay(beat_delay)){
+//   	//update the gl
+// 	
+// 	}
+printf("value: %d\n", value);
+}
 	
-	}
-	printf("value : %d\n", value);
 }
 
 

@@ -141,12 +141,21 @@ int soundmaker_get_delay(struct hit *hit1){
 	// 3 for drum 3
 	// 4 for drum 4
 void soundmaker_vector(unsigned pc){
+	armtimer_clear_interrupt();
 	int i = 0, drum = 0;
-	if(!(sensors_read_value(0) <= 100)){
+	
+	int d0 = sensors_read_value(0);
+	int d1 = sensors_read_value(1);
+	int d2 = sensors_read_value(2);
+	int d3 = sensors_read_value(3);
+	
+	
+	if(sensors_read_value(0)){
 		i = sensors_read_value(0);
 		drum = TOM_FREQ;
 		
-	}// else if(sensors_read_value(1)){
+	}
+// else if(sensors_read_value(1)){
 // 		i = sensors_read_value(1);
 // 		drum = TOM_FREQ;
 // 	}else if(sensors_read_value(2)){
@@ -163,7 +172,7 @@ void soundmaker_vector(unsigned pc){
 			soundmaker_record_beat(drum, i);
 			//also we should playback the sound on the initial hit
 	}
-	armtimer_clear_interrupt();
+	//armtimer_clear_interrupt();
 }
 
 void set_buttons(int button){
