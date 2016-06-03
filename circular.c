@@ -2,15 +2,23 @@
 #include "malloc.h"
 #include "assert.h"
 #include "printf.h"
+#include "soundmaker.h"
 
 #define CAPACITY 128
 
-
+/*cir structure*/
 struct cir {
     int buf[CAPACITY];
     unsigned head;
     unsigned tail;
 }; 
+
+/* hit structure */
+struct hit {
+	int frequency;
+	int volume;
+	int time_elapsed;
+};
 
 struct cir cir1;
 
@@ -76,7 +84,7 @@ void cir_enqueue(cir_t *cir, struct hit* x) {
 
 /* Removes an element from the buffer 
    Blocks if the buffer is empty */
-hit_t * cir_dequeue(cir_t *cir) {
+hit_t *cir_dequeue(cir_t *cir) {
 	//cir1 = *cir;
 	while(cir_empty(cir)){
 		//spin

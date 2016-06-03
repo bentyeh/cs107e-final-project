@@ -4,6 +4,8 @@
 #include "gpio.h"
 #include "pwm.h"
 #include "timer.h"
+#include "gpioextra.h"
+#include "gpioevent.h"
 
 
 #define START GPIO_PIN20
@@ -104,18 +106,23 @@ int get_time_elapsed(){
 
 //getter functions for main
 int soundmaker_get_frequency(struct hit *hit1){
-	
-	return *(struct hit*)hit1.frequency;
+	struct hit hit2 = *hit1;
+	int i = hit2.frequency;
+	return i;
 }
 
 //getter functions for main
 int soundmaker_get_volume(struct hit *hit1){
-	return *(hit1).volume;
+	struct hit hit2 = *hit1;
+	int i = hit2.volume;
+	return i;
 }
 
 //getter functions for main
 int soundmaker_get_delay(struct hit *hit1){
-	return *(hit1).delay;
+	struct hit hit2 = *hit1;
+	int i = hit2.time_elapsed;
+	return i;
 }
 
 //sensor_get_drum should return:	
