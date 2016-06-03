@@ -153,10 +153,14 @@ void soundmaker_vector(unsigned pc){
 // 		i = sensors_read_value(0);
 // 		drum = TOM_FREQ;	
 // 	}
-// else if(sensors_read_value(1)){
-// 		i = sensors_read_value(1);
-// 		drum = TOM_FREQ;
-// 	}else if(sensors_read_value(2)){
+//else 
+if(sensors_read_value(1)){
+		i = sensors_read_value(1);
+		drum = TOM_FREQ;
+		value = i;
+ 	}
+ 	
+//else if(sensors_read_value(2)){
 // 		i = sensors_read_value(2);
 // 		drum = KICK_FREQ;
 // 	}else if(sensors_read_value(3)){
