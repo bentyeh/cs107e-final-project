@@ -122,6 +122,14 @@ void main_vector(unsigned pc){
 //   
 }
 
+// void test_all_sensors(){
+// 	while(1){
+// 	
+// 	
+// 	}
+// 
+// }
+
 
 /*toggles so that we know if the circular buffer should be outputting the sound */
 // void main_toggle_play(){
