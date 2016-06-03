@@ -139,7 +139,7 @@ the wave shape, frequency, and volume (through modifying the waveform amplitude)
 */
 
 
-void audio_send_tone(wave_type_t type, unsigned int hz, int volume) {
+void audio_send_tone(wave_type_t type, unsigned int hz, int volume, int note_duration) {
   unsigned* waveform;
   if (type == WAVE_TRIANGLE) {
     waveform = waveform_triangle;
@@ -183,7 +183,8 @@ void audio_send_tone(wave_type_t type, unsigned int hz, int volume) {
 
     int i = 0;
     
-    while(1) {
+    int audio_tick = 0;
+    while(audio_tick < note_duration) {
       int status =  *(pwm + BCM2835_PWM_STATUS);
       
       if (!(status & BCM2835_FULL1)) {
@@ -193,7 +194,8 @@ void audio_send_tone(wave_type_t type, unsigned int hz, int volume) {
       }
       if ((status & ERRORMASK)) {
         *(pwm+BCM2835_PWM_STATUS) = ERRORMASK;
-      } 
+      }
+      audio_tick++; 
     }
   }
 }
