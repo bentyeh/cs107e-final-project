@@ -19,14 +19,16 @@
 #define _HEIGHT 600
 
 #define NUMOFDRUMS 4
+#define BEAT_LENGTH 200000
 
 void test_gl() {
     // Initialize graphics library with specified buffer (single or double)
-    drumimage_init(_WIDTH, _HEIGHT, GL_DOUBLEBUFFER);
-    beat_drum(1);
-    beat_drum(2);
-    beat_drum(3);
-    beat_drum(4);
+    drumimage_init(_WIDTH, _HEIGHT, NUMOFDRUMS);
+    while(1) {
+        for(int i = 0; i < NUMOFDRUMS; i++) {
+            beat_drum(i, BEAT_LENGTH    );
+        }
+    }
 }
 
 void main() {

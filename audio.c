@@ -283,35 +283,35 @@ unsigned waveform_sine[] = {32,
 
 //test tone function
 void audio_send_1kHz() {
-  audio_send_tone(WAVE_SINE, 1000, 1024);
+  audio_send_tone(WAVE_SINE, 1000, 1024, 1000);
 }
 
 /* Sends the audio tone for a tom drum */
 void audio_send_tom(int vol){
-	audio_send_tone(WAVE_SINE, TOM_FREQ, vol);
+	audio_send_tone(WAVE_SINE, TOM_FREQ, vol, 1000);
 }
 
 /* Sends the audio tone for a cymbal */
 void audio_send_cymbal(int vol){
-	audio_send_tone(WAVE_SINE, CYMBAL_FREQ, vol);
+	audio_send_tone(WAVE_SINE, CYMBAL_FREQ, vol, 1000);
 }
 
 /* Sends the audio tone for a kick drum */
 void audio_send_kick(int vol){
-	audio_send_tone(WAVE_SINE, KICK_FREQ, vol);
+	audio_send_tone(WAVE_SINE, KICK_FREQ, vol, 1000);
 }
 
 /*Sends the audio tone for a bongo drum */
 void audio_send_bongo(int vol){
-	audio_send_tone(WAVE_SINE, BONGO_FREQ, vol);
+	audio_send_tone(WAVE_SINE, BONGO_FREQ, vol, 1000);
 }
 
 /* Sends the audio tone for a conga drum */
 void audio_send_conga(int vol){
-	audio_send_tone(WAVE_SINE, CONGA_FREQ, vol);
+	audio_send_tone(WAVE_SINE, CONGA_FREQ, vol, 1000);
 }
 
 /* Sends the audio tone for a high-hat */
 void audio_send_high_hat(int vol){
-	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ, vol);
+	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ, vol, 1000);
 }
