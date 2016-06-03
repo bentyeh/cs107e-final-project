@@ -78,6 +78,8 @@ volatile unsigned* pwm  = (void*)PWM_BASE;
 #define CONGA_FREQ 100 //approx
 #define HIGH_HAT_FREQ 10 //sizzle
 
+#define MAX_VOL_VAL 1024
+
 unsigned waveform_square[64];
 unsigned waveform_triangle[64];
 unsigned waveform_saw[64];
@@ -139,7 +141,7 @@ TODO: Add a parameter
 */
 
 
-void audio_send_tone(wave_type_t type, unsigned int hz) {
+void audio_send_tone(wave_type_t type, unsigned int hz, int volume) {
   unsigned* waveform;
   if (type == WAVE_TRIANGLE) {
     waveform = waveform_triangle;
@@ -187,7 +189,7 @@ void audio_send_tone(wave_type_t type, unsigned int hz) {
       int status =  *(pwm + BCM2835_PWM_STATUS);
       
       if (!(status & BCM2835_FULL1)) {
-        *(pwm+BCM2835_PWM_FIFO) = waveform[i];
+        *(pwm+BCM2835_PWM_FIFO) = ((waveform[i] * volume) / MAX_VOL_VAL);
         i++;
         i = i % 64;
       }
@@ -281,35 +283,35 @@ unsigned waveform_sine[] = {32,
 
 //test tone function
 void audio_send_1kHz() {
-  audio_send_tone(WAVE_SINE, 1000);
+  audio_send_tone(WAVE_SINE, 1000, 1024);
 }
 
 /* Sends the audio tone for a tom drum */
-void audio_send_tom(){
-	audio_send_tone(WAVE_SINE, TOM_FREQ );
+void audio_send_tom(int vol){
+	audio_send_tone(WAVE_SINE, TOM_FREQ, vol);
 }
 
 /* Sends the audio tone for a cymbal */
-void audio_send_cymbal(){
-	audio_send_tone(WAVE_SINE, CYMBAL_FREQ );
+void audio_send_cymbal(int vol){
+	audio_send_tone(WAVE_SINE, CYMBAL_FREQ, vol);
 }
 
 /* Sends the audio tone for a kick drum */
-void audio_send_kick(){
-	audio_send_tone(WAVE_SINE, KICK_FREQ );
+void audio_send_kick(int vol){
+	audio_send_tone(WAVE_SINE, KICK_FREQ, vol);
 }
 
 /*Sends the audio tone for a bongo drum */
-void audio_send_bongo(){
-	audio_send_tone(WAVE_SINE, BONGO_FREQ );
+void audio_send_bongo(int vol){
+	audio_send_tone(WAVE_SINE, BONGO_FREQ, vol);
 }
 
 /* Sends the audio tone for a conga drum */
-void audio_send_conga(){
-	audio_send_tone(WAVE_SINE, CONGA_FREQ );
+void audio_send_conga(int vol){
+	audio_send_tone(WAVE_SINE, CONGA_FREQ, vol);
 }
 
 /* Sends the audio tone for a high-hat */
-void audio_send_high_hat(){
-	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ );
+void audio_send_high_hat(int vol){
+	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ, vol);
 }

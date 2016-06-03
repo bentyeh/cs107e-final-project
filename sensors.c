@@ -19,7 +19,7 @@ void sensors_init(void){
 * Reads single values from the slave as opposed to differentials
 * The MCP3008 has seven channels, so only numbers up to 7 may be params
 * For the RPi bongos, the channel number corresponds to the drum number
-*
+* The max value for a hit on the knock sensor seems to be 1024
 */
 int sensors_read_value(unsigned int channel){
 	unsigned char instruction[3] = {1,0,0};
