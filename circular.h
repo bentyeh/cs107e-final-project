@@ -31,7 +31,7 @@ int cir_empty(cir_t *cir);
 int cir_full(cir_t *cir);
 
 // Puts elem at the back of the queue.
-void cir_enqueue(cir_t *cir, struct hit* x);
+void cir_enqueue(cir_t *cir, volatile struct hit* x);
 
 // Returns an element from the front of the queue; if there
 // is no element in the queue, spins and waits  (blocks) 

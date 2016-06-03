@@ -61,7 +61,7 @@ int cir_full(cir_t *cir) {
 
 /* Adds an element to the ring buffer
    Asserts an error if the buffer is full */
-void cir_enqueue(cir_t *cir, struct hit* x) {
+void cir_enqueue(cir_t *cir, volatile struct hit* x) {
 // 	printf("init head: %d\n", (cir->head) % CAPACITY);
 // 	printf("init tail: %d\n", (cir->tail) % CAPACITY);
 	//cir1 = *cir;

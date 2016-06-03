@@ -6,12 +6,21 @@
 #include "timer.h"
 #include "gpioextra.h"
 #include "gpioevent.h"
+#include "sensors.h" 
 
 
 #define START GPIO_PIN20
 #define STOP GPIO_PIN21
 #define PLAY GPIO_PIN22
 #define CLEAR GPIO_PIN23
+
+/* Defines for the frequencies of different drums */
+#define TOM_FREQ 120 //full
+#define CYMBAL_FREQ 200 //clank
+#define KICK_FREQ 60 //thump
+#define BONGO_FREQ 80 //approx
+#define CONGA_FREQ 100 //approx
+#define HIGH_HAT_FREQ 10 //sizzle
 
 
 /* prototypes */
@@ -55,13 +64,13 @@ void soundmaker_init(void) {
 *** probably should be called by the interrupt handler
 */
 
-void soundmaker_record_beat(int i){
+void soundmaker_record_beat(int drum, int i){
 	//make new hit and enqueue it
 	
 	struct hit hit1;
 	
-	hit1.frequency = i;
-	//hit1.volume = pwm.get_volume_input();  	WHAT IS THE VOLUME INPUT HERE
+	hit1.frequency = drum;
+	hit1.volume = i;  	//WHAT IS THE VOLUME INPUT HERE?
 	hit1.time_elapsed = get_time_elapsed();
 	
 	//store the pointer to the struct in the circular queue
@@ -80,7 +89,7 @@ hit_t *soundmaker_replay_beat(){
 	if(cir_empty(cir)){
 		return 0;
 	}
-	struct hit *hptr = cir_dequeue(cir);
+	volatile struct hit *hptr = cir_dequeue(cir);
 	cir_enqueue(cir, hptr);
 	return hptr;
 
@@ -131,10 +140,25 @@ int soundmaker_get_delay(struct hit *hit1){
 	// 3 for drum 3
 	// 4 for drum 4
 void soundmaker_vector(unsigned pc){
-	int i = sensors_read_value(0);
+	int i = 0, drum = 0;
+	if(sensors_read_value(0)){
+		i = sensors_read_value(0);
+		drum = TOM_FREQ;
+	}else if(sensors_read_value(1)){
+		i = sensors_read_value(1);
+		drum = CYMBAL_FREQ;
+	}else if(sensors_read_value(2)){
+		i = sensors_read_value(2);
+		drum = KICK_FREQ;
+	}else if(sensors_read_value(3)){
+		i = sensors_read_value(3);
+		drum = BONGO_FREQ;
+	}
 	if(i){	
+		//play back beat without storing it
+		audio_send_tone(WAVE_SINE, drum, i);
 		if(!toggle_stop)
-			soundmaker_record_beat(i);
+			soundmaker_record_beat(drum, i);
 			//also we should playback the sound on the initial hit
 	}
 	armtimer_clear_interrupt();
