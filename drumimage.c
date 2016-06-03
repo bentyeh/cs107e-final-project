@@ -3,38 +3,50 @@
 #include "malloc.h"
 #include "timer.h"
 #include "minimath.h"
+#include "printf.h"
 
 static unsigned *drum_array; // array of x-values of centers of drums
 static unsigned drum_diameter;
 static unsigned num_drums;
 static unsigned gl_width;
 static unsigned gl_height;
+const color BACKGROUND_COLOR = GL_WHITE;
 const color RESTING_COLOR = GL_BLUE;
 const color BEAT_COLOR = GL_RED;
 
-void drumimage_init(unsigned width, unsigned height, unsigned buffer, unsigned num) {
+void drumimage_init(unsigned width, unsigned height, unsigned num) {
     unsigned i;
 
+    // Stores initialization arguments into global variables
     gl_width = width;
     gl_height = height;
     num_drums = num;
+
+    // Calculate diameter for a drum
     drum_diameter = min_u(gl_width / (2*num + 1), gl_height);
+
+    // Malloc memory for drum_array
     drum_array = malloc(num_drums * sizeof(unsigned));
 
-    gl_init(gl_width, gl_height, buffer);
+    // Set values in drum_array
     for(i = 0; i<num_drums; i++) {
         *(drum_array+i) = (2*i+1) * gl_width / (2*num_drums + 1) + drum_diameter/2;
     }
-    gl_clear(GL_WHITE);
+
+    // Initialize graphics library with single buffer
+    gl_init(gl_width, gl_height, GL_SINGLEBUFFER);
+
+    // Clear the screen to the background color
+    gl_clear(BACKGROUND_COLOR);
+
+    // Initialize the drums (draw drums with RESTING_COLOR)
     initialize_drums(num_drums);
 }
 
-void beat_drum(unsigned drum_num) {
+void beat_drum(unsigned drum_num, unsigned beat_duration) {
     draw_drum(drum_num, BEAT_COLOR);
-    gl_swap_buffer();
-    delay_us(20000);
+    delay_us(beat_duration);
     draw_drum(drum_num, RESTING_COLOR);
-    gl_swap_buffer();
 }
 
 void initialize_drums() {
