@@ -20,7 +20,7 @@
 /* globals*/
 static void setup_interrupts();
 int toggle_play = 0;
-int toggle_stop = 0;
+int toggle_stop = 1;
 static int toggle_clear = 0;
 static int beat_delay = 0;
 
@@ -28,7 +28,6 @@ static int beat_delay = 0;
 void main_cycle_sound();
 
 void main(void) {
-  delay(2);
   audio_init();
   sensors_init();
   gpio_init();
@@ -52,6 +51,7 @@ void main(void) {
   	//update the gl
 	
 	}
+	printf("value : %d\n", value);
 }
 
 

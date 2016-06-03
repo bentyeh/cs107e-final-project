@@ -39,6 +39,7 @@ struct hit {
 cir_t* cir;
 static int stored_time;
 static int first_beat_time;
+int value = 0;
 
 extern int toggle_play; //can i get this from main?
 extern int toggle_stop; //can i get this from main?
@@ -141,19 +142,20 @@ int soundmaker_get_delay(struct hit *hit1){
 	// 4 for drum 4
 void soundmaker_vector(unsigned pc){
 	int i = 0, drum = 0;
-	if(sensors_read_value(0)){
+	if(!(sensors_read_value(0) <= 100)){
 		i = sensors_read_value(0);
 		drum = TOM_FREQ;
-	}else if(sensors_read_value(1)){
-		i = sensors_read_value(1);
-		drum = CYMBAL_FREQ;
-	}else if(sensors_read_value(2)){
-		i = sensors_read_value(2);
-		drum = KICK_FREQ;
-	}else if(sensors_read_value(3)){
-		i = sensors_read_value(3);
-		drum = BONGO_FREQ;
-	}
+		
+	}// else if(sensors_read_value(1)){
+// 		i = sensors_read_value(1);
+// 		drum = TOM_FREQ;
+// 	}else if(sensors_read_value(2)){
+// 		i = sensors_read_value(2);
+// 		drum = KICK_FREQ;
+// 	}else if(sensors_read_value(3)){
+// 		i = sensors_read_value(3);
+// 		drum = BONGO_FREQ;
+// 	}
 	if(i){	
 		//play back beat without storing it
 		audio_send_tone(WAVE_SINE, drum, i);
