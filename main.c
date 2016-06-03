@@ -15,6 +15,7 @@
 #define STOP GPIO_PIN21
 #define PLAY GPIO_PIN22
 #define CLEAR GPIO_PIN23
+#define GPROF_TIMER_INTERVAL 0x10
 
 /* globals*/
 static void setup_interrupts();
@@ -29,17 +30,8 @@ void main_cycle_sound();
 void main(void) {
   delay(2);
   audio_init();
-//  for(int i = 0; i < 3; i++){
-	while(1){
-  	int val = sensors_read_value(0);
-//   	if(val > 0){
-//   		audio_send_tone(WAVE_SINE, 1000);
-//   	
-//   		audio_send_tone(WAVE_SINE, 0);
-//   	}
-  	printf("val: %d\n", val);
-  }
-  /*gpio_init();
+  sensors_init();
+  gpio_init();
   soundmaker_init();
   armtimer_init();
   armtimer_start(GPROF_TIMER_INTERVAL);
@@ -98,37 +90,31 @@ void main_vector(unsigned pc){
 //none of the functionality specified here should actually occur in the handler
 //it needs to toggle things that are in a larger while loop that when checked 
 //change what is currently happening in the program
-//   if(pc == (START)){
-//   	initialize a new circular buffer
-//   	 soundmaker_new_cir();
-//   	 turn on the recording of interrupts
-//   	 gpio_check_and_clear_event(START);
-//   }else if(pc == (STOP)){
-//   	stop the recording of interrupts
-//   	main_toggle_stop();
-//   	toggle_stop = 1;
-//   	gpio_check_and_clear_event(STOP);
-//   }else if(pc == (PLAY)){
-//   	cycle through the circular queue
-//   	main_toggle_play();
-//   	toggle_play = 1;	
-//   	gpio_check_and_clear_event(PLAY);
-//   }else if(pc == (CLEAR)){
-//   	set all values in the circular queue to zero
-//   	main_toggle_clear();
-//   	toggle_clear = 1;
-//   	gpio_check_and_clear_event(CLEAR);
-//   }
-//   
+  if(pc == (START)){
+  	//initialize a new circular buffer
+  	 soundmaker_new_cir();
+  	// turn on the recording of interrupts
+  	 gpio_check_and_clear_event(START);
+  }else if(pc == (STOP)){
+  	//stop the recording of interrupts
+  	//main_toggle_stop();
+  	toggle_stop = 1;
+  	gpio_check_and_clear_event(STOP);
+  }else if(pc == (PLAY)){
+  	//cycle through the circular queue
+  	//main_toggle_play();
+  	toggle_play = 1;	
+  	gpio_check_and_clear_event(PLAY);
+  }else if(pc == (CLEAR)){
+  	//set all values in the circular queue to zero
+  	//main_toggle_clear();
+  	toggle_clear = 1;
+  	gpio_check_and_clear_event(CLEAR);
+  }
+  
 }
 
-// void test_all_sensors(){
-// 	while(1){
-// 	
-// 	
-// 	}
-// 
-// }
+
 
 
 /*toggles so that we know if the circular buffer should be outputting the sound */
