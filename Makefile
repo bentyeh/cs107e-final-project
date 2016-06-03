@@ -16,7 +16,7 @@ CFLAGS = -I$(CS107E)/libpi/include -I./include -g -Wall -Og -std=c99 -ffreestand
 
 # Your application code: edit to change what is part of your executable
 # The source files need to be in the local directory.
-override OBJECTS += start.o cstart.o gl.o interrupts_handler.o sensors.o pwm.o soundmaker.o circular.o
+override OBJECTS += start.o cstart.o gl.o interrupts_handler.o sensors.o pwm.o soundmaker.o circular.o audio.o
 
 # Your library modules: edit to change which code of yours is in libpi
 # The source files need to be in the local directory.
@@ -24,7 +24,7 @@ LIBPI_STUDENT_MODULES = minimath.o gl.o
 
 # Reference library modules: edit to change which reference code is in libpi
 # These .o files are in ../cs107e.github.io/libpi/modules
-override LIBPI_REFERENCE_MODULES += printf.o gpio.o timer.o fb.o malloc.o strtol.o register.o gpioextra.o uart.o memory.o reboot.o mailbox.o vectors.o gpioevent.o interrupts.o armtimer.o font.o spi.o
+override LIBPI_REFERENCE_MODULES += printf.o gpio.o timer.o fb.o malloc.o strtol.o register.o gpioextra.o uart.o memory.o reboot.o mailbox.o vectors.o gpioevent.o interrupts.o armtimer.o font.o spi.o bcm.o memory.o tone.o
 
 # The first target listed in the makefile is the default product built when
 # make is invoked with no argument. So if you type 'make', it'll try to
