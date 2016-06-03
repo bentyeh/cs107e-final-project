@@ -8,6 +8,7 @@
 #include "gpioevent.h"
 #include "sensors.h" 
 #include "tone.h"
+#include "audio.h"
 
 
 #define START GPIO_PIN20
@@ -56,7 +57,7 @@ void soundmaker_init(void) {
   	set_buttons(CLEAR);
 	stored_time = 0;
 	first_beat_time = 0;
-	cir = cir_new();
+	//cir = cir_new();
 
 }
 
@@ -140,10 +141,11 @@ int soundmaker_get_delay(hit_t hit1){
 void soundmaker_vector(unsigned pc){
 	armtimer_clear_interrupt();
 	int i = 0, drum = 0;
-	int d0 = sensors_read_value(0);
-	int d1 = sensors_read_value(1);
-	int d2 = sensors_read_value(2);
-	int d3 = sensors_read_value(3);
+	
+// 	int d0 = sensors_read_value(0);
+// 	int d1 = sensors_read_value(1);
+// 	int d2 = sensors_read_value(2);
+// 	int d3 = sensors_read_value(3);
 	
 	
 	
@@ -163,8 +165,7 @@ void soundmaker_vector(unsigned pc){
 // 	}
 	if(i){	
 		//play back beat without storing it
-		//audio_send_tone(WAVE_SINE, drum, i);
-		tone(drum);
+		audio_send_tone(WAVE_SINE, drum, i, 1000);
 		if(!toggle_stop)
 			soundmaker_record_beat(drum, i);
 			//also we should playback the sound on the initial hit

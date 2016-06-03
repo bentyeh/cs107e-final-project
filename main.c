@@ -54,10 +54,10 @@ void main(void) {
 //   	//update the gl
 // 	
 // 	}
-gpio_set_function(PWM_0, GPIO_FUNC_ALT0);
-gpio_set_function(PWM_1, GPIO_FUNC_ALT0);
-pwm_clock(F_AUDIO);
-tone(120);
+// gpio_set_function(PWM_0, GPIO_FUNC_ALT0);
+// gpio_set_function(PWM_1, GPIO_FUNC_ALT0);
+// pwm_clock(F_AUDIO);
+// tone(120);
 printf("value: %d\n", value);
 }
 	
