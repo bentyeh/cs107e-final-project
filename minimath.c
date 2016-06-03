@@ -1,9 +1,11 @@
 #include "minimath.h"
 
-double abs (double x) {
-	if(x > 0)
-		return x;
-	return -x;
+double abs_d(double x) {
+	return (x >= 0) ? x : -x;
+}
+
+int abs_i(int x) {
+	return (x >= 0) ? x : -x;
 }
 
 // Round halfway cases away from zero (ex: round(-0.7) == -1)
@@ -58,9 +60,26 @@ double rfpart(double x) {
     return -1 - fpart(x);
 }
 
+int min_i(int x, int y) {
+	return (x > y) ? y : x;
+}
+
 unsigned min_u(unsigned x, unsigned y) {
-	if (x > y) {
-		return y;
-	}
-	return x;
+	return (x > y) ? y : x;
+}
+
+double min_d(double x, double y) {
+	return (x > y) ? y : x;
+}
+
+int max_i(int x, int y) {
+	return (x < y) ? y : x;
+}
+
+unsigned max_u(unsigned x, unsigned y) {
+	return (x < y) ? y : x;
+}
+
+double max_d(double x, double y) {
+	return (x < y) ? y : x;
 }

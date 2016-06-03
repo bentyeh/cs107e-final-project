@@ -136,6 +136,7 @@ unsigned int audio_set_clock(unsigned int frequency) {
 
 This is a generic send tone function that allows the caller to indicate
 the wave shape, frequency, and volume (through modifying the waveform amplitude)
+The note duration parameter is currently in ticks of the armtimer
 */
 
 
@@ -183,8 +184,8 @@ void audio_send_tone(wave_type_t type, unsigned int hz, int volume, int note_dur
 
     int i = 0;
     
-    int audio_tick = 0;
-    while(audio_tick < note_duration) {
+    // int audio_tick = 0;
+    // while(audio_tick < note_duration) {
       int status =  *(pwm + BCM2835_PWM_STATUS);
       
       if (!(status & BCM2835_FULL1)) {
@@ -195,8 +196,8 @@ void audio_send_tone(wave_type_t type, unsigned int hz, int volume, int note_dur
       if ((status & ERRORMASK)) {
         *(pwm+BCM2835_PWM_STATUS) = ERRORMASK;
       }
-      audio_tick++; 
-    }
+      // audio_tick++; 
+    //}
   }
 }
 
