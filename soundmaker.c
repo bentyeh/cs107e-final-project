@@ -66,20 +66,13 @@ void soundmaker_init(void) {
 *** probably should be called by the interrupt handler
 */
 
-void soundmaker_record_beat(int drum, int i){
+void soundmaker_record_beat(hit_t hit1){
 	//make new hit and enqueue it
 	
-	hit_t hit1;
+	hit_t hit2 = hit1;
+	hit2.time_elapsed = get_time_elapsed();
 	
-	hit1.frequency = drum;
-	hit1.volume = i;  	//WHAT IS THE VOLUME INPUT HERE?
-	hit1.time_elapsed = get_time_elapsed();
-	
-	//store the pointer to the struct in the circular queue
-	
-	//struct hit *hit1_ptr = &hit1;
-	
-	cir_enqueue(cir, hit1);
+	cir_enqueue(cir_record, hit2);
 
 }
 
@@ -133,48 +126,64 @@ int soundmaker_get_delay(hit_t hit1){
 	return i;
 }
 
-//sensor_get_drum should return:	
-	// 1 for drum 1
-	// 2 for drum 2
-	// 3 for drum 3
-	// 4 for drum 4
+	
+/*This is a timer interrupt that fires to see if the drums were hit because
+we cannot get interrupts directly from SPI*/
+
 void soundmaker_vector(unsigned pc){
+	//clear the interrupt
 	armtimer_clear_interrupt();
-	int i = 0, drum = 0;
 	
-// 	int d0 = sensors_read_value(0);
-// 	int d1 = sensors_read_value(1);
-// 	int d2 = sensors_read_value(2);
-// 	int d3 = sensors_read_value(3);
+	//set initial values to zero because there might not have been any drum hit
+	int sum = 0, drum = 0, num_drums = 0;
 	
+	//check how hard each drum was hit
+	int d0 = sensors_read_value(0);
+	int d1 = sensors_read_value(1);
+	int d2 = sensors_read_value(2);
+	int d3 = sensors_read_value(3);
 	
-	
-// 	if(sensors_read_value(0)){
-// 		i = sensors_read_value(0);
-// 		drum = TOM_FREQ;	
-// 	}
-//else 
-if(sensors_read_value(1)){
-		i = sensors_read_value(1);
-		drum = TOM_FREQ;
-		value = i;
- 	}
- 	
-//else if(sensors_read_value(2)){
-// 		i = sensors_read_value(2);
-// 		drum = KICK_FREQ;
-// 	}else if(sensors_read_value(3)){
-// 		i = sensors_read_value(3);
-// 		drum = BONGO_FREQ;
-// 	}
-	if(i){	
-		//play back beat without storing it
-		audio_send_tone(WAVE_SINE, drum, i, 1000);
-		if(!toggle_stop)
-			soundmaker_record_beat(drum, i);
-			//also we should playback the sound on the initial hit
+	//add up if multiple drums were hit
+	if(d0 > 0){
+		sum += d0;
+		drum += TOM_FREQ;
+		num_drums++;
 	}
-	//armtimer_clear_interrupt();
+	if(d1 > 0){
+		sum += d1;
+		drum += CONGA_FREQ;
+		num_drums++;
+	}
+	if(d2 > 0){
+		sum += d2;
+		drum += KICK_FREQ;
+		num_drums++;
+	}
+	if(d3 > 0){
+		sum += d3;
+		drum += BONGO_FREQ;
+		num_drums++;
+	}
+	
+	//average the frequencies between the drum hits and volumes if more than
+	//one drum was hit
+	int comb_freq = (drum / num_drums);
+	int comb_vol = (sum / num_drums);
+	
+	//generate a hit from the drums
+	hit_t hit1;
+	hit1.frequency = comb_freq;
+	hit1.volume = comb_volume;
+	hit1.time_elapsed = 0;
+	
+	//enqueue the hit into the freeplay circular buffer
+	cir_enqueue(cir_freeplay, hit1);
+	
+	//enqueue in the recording function
+	if(!toggle_stop)
+			soundmaker_record_beat(hit1);		
+	}
+
 }
 
 void set_buttons(int button){
