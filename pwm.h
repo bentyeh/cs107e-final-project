@@ -6,6 +6,8 @@
 #define PWM_ENABLE 1 
 #define PWM_USE_MARKSPACE 1 
 #define PWM_USE_FIFO 1
+#define PWM_0 40
+#define PWM_1 45
 
 extern void pwm_clock( int frequency );
 
