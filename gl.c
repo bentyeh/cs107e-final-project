@@ -193,7 +193,7 @@ void gl_draw_line(int x1, int y1, int x2, int y2, color c) {
     }
 
     // If slope is greater than 1
-    steep = abs(y2 - y1) > abs(x2 - x1);
+    steep = abs_i(y2 - y1) > abs_i(x2 - x1);
     if(steep) {
         swap(&x1, &y1);
         swap(&x2, &y2);
