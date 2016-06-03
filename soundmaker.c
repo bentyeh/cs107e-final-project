@@ -194,9 +194,9 @@ void set_buttons(int button){
 }
 
 void soundmaker_new_cir(){
-	cir = cir_new();
+	cir_record = cir_new();
 }
 
 void soundmaker_clear_cir(){
-	cir_clear(cir);
+	cir_clear(cir_record);
 }

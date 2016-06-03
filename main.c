@@ -11,12 +11,14 @@
 #include "armtimer.h"
 #include "audio.h"
 #include "tone.h"
+#include "drumimage.h"
 
 #define START GPIO_PIN20
 #define STOP GPIO_PIN21
 #define PLAY GPIO_PIN22
 #define CLEAR GPIO_PIN23
 #define GPROF_TIMER_INTERVAL 0x10
+#define DURATION 1000
 
 /* globals*/
 static void setup_interrupts();
@@ -35,31 +37,27 @@ void main(void) {
   sensors_init();
   gpio_init();
   soundmaker_init();
+ // drumimage_init((unsigned width, unsigned height, unsigned num));
   armtimer_init();
   armtimer_start(GPROF_TIMER_INTERVAL);
   setup_interrupts();
   while(1){
-//   	if(toggle_play){
-//   		//go through playing circular buffer (dequeue and requeue)
-//   	}
-//   	if(toggle_stop){
-//   		//stop playing the circular buffer
-//   	}
-//   	if(toggle_clear){
-//   		soundmaker_clear_cir();
-//   		toggle_clear = 0;
-//   		toggle_play = 0;
-//   	}
-//   	//while(delay(beat_delay)){
-//   	//update the gl
-// 	
-// 	}
-// gpio_set_function(PWM_0, GPIO_FUNC_ALT0);
-// gpio_set_function(PWM_1, GPIO_FUNC_ALT0);
-// pwm_clock(F_AUDIO);
-// tone(120);
-printf("value: %d\n", value);
-}
+	if(!cir_empty(cir_freeplay)){
+		//play sound
+		hit_t hit1 = cir_dequeue(cir_freeplay);
+		audio_send_tone(WAVE_SINE, hit1.frequency, hit1.volume, DURATION);
+		//beat_drum(drum_num, DURATION);
+	}
+	if(toggle_play){
+		//cycle through the stored buffer and figure out how to deal with delays
+		while(!toggle_stop){
+			main_cycle_sound();
+		}
+		
+	}
+	
+  	printf("value: %d\n", value);
+  }
 	
 }
 
@@ -70,14 +68,11 @@ dequeue is.
 it dequeues a value, then it plays the sets the beat to be played after its delay
 is completed, then it will requeue the beat when it is done */
 void main_cycle_sound(){
-	// int *hit1_ptr = soundmaker_replay_beat();
-// 		if(hit1_ptr == 0){
-// 			printf("the queue was empty\n");
-// 		}
-// 	beat_delay = soundmaker_get_delay(hit1_ptr);
-// 		//pass the pwm output the volume and frequency
-// 	//pwm.play_sound(soundmaker_get_volume(hit1_ptr), soundmaker_get_frequency(hit1_ptr));
-	
+	hit_t play_out = cir_dequeue(cir_record);
+	cir_enqueue(cir_record, play_out);
+	int delay_time = play_out.time_elapsed;
+	delay(delay_time);
+	audio_send_tone(WAVE_SINE, play_out.frequency, play_out.volume, DURATION);
 }
 
 
@@ -102,6 +97,7 @@ void main_vector(unsigned pc){
   if(pc == (START)){
   	//initialize a new circular buffer
   	 soundmaker_new_cir();
+  	 toggle_stop = 0;
   	// turn on the recording of interrupts
   	 gpio_check_and_clear_event(START);
   }else if(pc == (STOP)){
