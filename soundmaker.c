@@ -2,6 +2,8 @@
 #include "circular.h"
 #include "armtimer.h"
 #include "gpio.h"
+#include "pwm.h"
+#include "timer.h"
 
 
 #define START GPIO_PIN20
@@ -27,8 +29,8 @@ cir_t* cir;
 static int stored_time;
 static int first_beat_time;
 
-extern toggle_play; //can i get this from main?
-extern toggle_stop; //can i get this from main?
+extern int toggle_play; //can i get this from main?
+extern int toggle_stop; //can i get this from main?
 
 /*
  * initialize the sound maker
@@ -43,7 +45,6 @@ void soundmaker_init(void) {
 	stored_time = 0;
 	first_beat_time = 0;
 	cir = cir_new();
-	cur_frequency = 0;
 
 }
 
@@ -52,20 +53,20 @@ void soundmaker_init(void) {
 *** probably should be called by the interrupt handler
 */
 
-soundmaker_record_beat(int i){
+void soundmaker_record_beat(int i){
 	//make new hit and enqueue it
 	
 	struct hit hit1;
 	
 	hit1.frequency = i;
-	hit1.volume = pwm.get_volume_input();
+	//hit1.volume = pwm.get_volume_input();  	WHAT IS THE VOLUME INPUT HERE
 	hit1.time_elapsed = get_time_elapsed();
 	
 	//store the pointer to the struct in the circular queue
 	
-	int *hit1_ptr = &hit1;
+	struct hit *hit1_ptr = &hit1;
 	
-	cir.enqueue(hit1_ptr);
+	cir_enqueue(cir, hit1_ptr);
 
 }
 
@@ -77,8 +78,8 @@ hit_t *soundmaker_replay_beat(){
 	if(cir_empty(cir)){
 		return 0;
 	}
-	int hptr = cir.dequeue();
-	cir_enqueue(hptr);
+	struct hit *hptr = cir_dequeue(cir);
+	cir_enqueue(cir, hptr);
 	return hptr;
 
 }
@@ -102,18 +103,19 @@ int get_time_elapsed(){
 
 
 //getter functions for main
-int soundmaker_get_frequency(int *hit1){
-	return *hit1->frequency;
+int soundmaker_get_frequency(struct hit *hit1){
+	
+	return *(struct hit*)hit1.frequency;
 }
 
 //getter functions for main
-int soundmaker_get_volume(int *hit1){
-	return *hit1->volume;
+int soundmaker_get_volume(struct hit *hit1){
+	return *(hit1).volume;
 }
 
 //getter functions for main
-int soundmaker_get_delay(int *hit1){
-	return *hit1->delay;
+int soundmaker_get_delay(struct hit *hit1){
+	return *(hit1).delay;
 }
 
 //sensor_get_drum should return:	
@@ -122,7 +124,7 @@ int soundmaker_get_delay(int *hit1){
 	// 3 for drum 3
 	// 4 for drum 4
 void soundmaker_vector(unsigned pc){
-	int i = pwm.sensor_get_drum();
+	int i = sensors_read_value(0);
 	if(i){	
 		if(!toggle_stop)
 			soundmaker_record_beat(i);

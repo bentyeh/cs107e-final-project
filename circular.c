@@ -53,7 +53,7 @@ int cir_full(cir_t *cir) {
 
 /* Adds an element to the ring buffer
    Asserts an error if the buffer is full */
-void cir_enqueue(cir_t *cir, int x) {
+void cir_enqueue(cir_t *cir, struct hit* x) {
 // 	printf("init head: %d\n", (cir->head) % CAPACITY);
 // 	printf("init tail: %d\n", (cir->tail) % CAPACITY);
 	//cir1 = *cir;
@@ -76,13 +76,13 @@ void cir_enqueue(cir_t *cir, int x) {
 
 /* Removes an element from the buffer 
    Blocks if the buffer is empty */
-int cir_dequeue(cir_t *cir) {
+hit_t * cir_dequeue(cir_t *cir) {
 	//cir1 = *cir;
 	while(cir_empty(cir)){
 		//spin
 	}
 	
-	int return_val = cir->buf[(cir->head)%CAPACITY];
+	struct hit* return_val = cir->buf[(cir->head)%CAPACITY];
 	cir->head = (cir->head) + 1;
 // 	if(cir.head == cir.tail){
 // 		//IF THE BUFFER HAS BEEN EMPTIED RESET TO ZERO
