@@ -8,13 +8,12 @@
  * usually) are accessing simultaneously.
  */
 
-struct hit {
-	int frequency;
+typedef volatile struct hit {
+	int drum;
     int volume;
     int time_elapsed;
-}
-
-typedef volatile struct hit hit_t;
+}hit_t;
+ 
 typedef volatile struct cir cir_t;
 
 // Allocates and initializes a new circular buffer. To set up a circular buffer

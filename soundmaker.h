@@ -5,7 +5,7 @@
 
 /*
 Stores three integers:
-* frequency
+* drum
 * volume
 * time_elapsed 
  */

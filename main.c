@@ -59,7 +59,7 @@ void main(void) {
 	if(!cir_empty(cir_freeplay)){
 		//play sound
 		hit_t hit1 = cir_dequeue(cir_freeplay);
-		int freq = hit1.frequency;
+		int drum = hit1.drum;
 		
 //mask here		
 		
@@ -90,7 +90,7 @@ void main_cycle_sound(){
 	cir_enqueue(cir_record, play_out);
 	int delay_time = play_out.time_elapsed;
 	delay(delay_time);
-	audio_send_tone(WAVE_SINE, play_out.frequency, play_out.volume, DURATION);
+	audio_send_tone(WAVE_SINE, play_out.drum, play_out.volume, DURATION);
 }
 
 

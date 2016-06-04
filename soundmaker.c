@@ -23,12 +23,6 @@ int get_time_elapsed();
 void set_buttons(int button);
 
 
-/* hit structure */
-// struct hit {
-// 	int frequency;
-// 	int volume;
-// 	int time_elapsed;
-// };
 
 /* Globals */
 cir_t* cir_record;
@@ -104,8 +98,8 @@ int get_time_elapsed(){
 
 
 //getter functions for main
-int soundmaker_get_frequency(hit_t hit1){
-	int i = hit1.frequency;
+int soundmaker_get_drum(hit_t hit1){
+	int i = hit1.drum;
 	return i;
 }
 
@@ -151,12 +145,12 @@ void soundmaker_vector(unsigned pc){
 	}
 	if(d2 > 0){
 		sum += d2;
-		drum += 0b3;
+		drum += 0b4;
 		num_drums++;
 	}
 	if(d3 > 0){
 		sum += d3;
-		drum += 0b4;
+		drum += 0b8;
 		num_drums++;
 	}
 	
@@ -169,7 +163,7 @@ void soundmaker_vector(unsigned pc){
 	hit_t hit1;
 	//hit1.frequency = comb_freq;
 	value = drum;
-	hit1.frequency = drum;
+	hit1.drum = drum;
 	hit1.volume = comb_vol;
 	hit1.time_elapsed = 0;
 	
