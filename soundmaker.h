@@ -22,14 +22,3 @@ void soundmaker_clear_cir();
 
 
 #endif
-
-/*
-
-#define DRUM_1 TOM_FREQ
-#define DRUM_2 KICK_FREQ
-#define DRUM_3 BONGO_FREQ
-#define DRUM_4 CONGA_FREQ
-
-int DRUM_FREQ[NUM_DRUMS] = {DRUM_1, DRUM_2, DRUM_3, DRUM_4};
-
-*/

@@ -23,19 +23,18 @@
 #define HEIGHT 600
 #define NUM_DRUMS 4
 
-/* Defines for the frequencies of different drums */
-#define DRUM0_FREQ TOM_FREQ
-#define DRUM1_FREQ CYMBAL_FREQ
-#define KICK_FREQ 60 //thump
-#define BONGO_FREQ 80 //approx
-#define CONGA_FREQ 100 //approx
-#define HIGH_HAT_FREQ 10 //sizzle
+/* drumsssss */
+#define DRUM_1 TOM_FREQ
+#define DRUM_2 KICK_FREQ
+#define DRUM_3 BONGO_FREQ
+#define DRUM_4 CONGA_FREQ
 
 // Global variables
 int toggle_play = 0;
 int toggle_stop = 1;
 static int toggle_clear = 0;
 static int beat_delay = 0;
+int DRUM_FREQ[NUM_DRUMS] = {DRUM_1, DRUM_2, DRUM_3, DRUM_4};
 
 // External global variables
 extern int value;
@@ -73,7 +72,7 @@ void main(void) {
                         freq1 = DRUM_FREQ[i];
                     }
                     else if(!freq2) {
-                        freq2 = DRUM_FREQ[i]
+                        freq2 = DRUM_FREQ[i];
                     }
                     else {
                         break;

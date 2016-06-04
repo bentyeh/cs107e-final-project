@@ -135,22 +135,22 @@ void soundmaker_vector(unsigned pc){
 	//add up if multiple drums were hit
 	if(d0 > 0){
 		sum += d0;
-		drum += 0b1;
+		drum += 1;
 		num_drums++;
 	}
 	if(d1 > 0){
 		sum += d1;
-		drum += 0b2;
+		drum += 2;
 		num_drums++;
 	}
 	if(d2 > 0){
 		sum += d2;
-		drum += 0b4;
+		drum += 4;
 		num_drums++;
 	}
 	if(d3 > 0){
 		sum += d3;
-		drum += 0b8;
+		drum += 8;
 		num_drums++;
 	}
 	
