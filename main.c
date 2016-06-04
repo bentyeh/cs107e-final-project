@@ -23,6 +23,14 @@
 #define HEIGHT 600
 #define NUM_DRUMS 4
 
+/* Defines for the frequencies of different drums */
+#define TOM_FREQ 120 //full
+#define CYMBAL_FREQ 200 //clank
+#define KICK_FREQ 60 //thump
+#define BONGO_FREQ 80 //approx
+#define CONGA_FREQ 100 //approx
+#define HIGH_HAT_FREQ 10 //sizzle
+
 // Global variables
 int toggle_play = 0;
 int toggle_stop = 1;
@@ -51,7 +59,11 @@ void main(void) {
 	if(!cir_empty(cir_freeplay)){
 		//play sound
 		hit_t hit1 = cir_dequeue(cir_freeplay);
-		audio_send_tone(WAVE_SINE, hit1.frequency, hit1.volume, DURATION);
+		int freq = hit1.frequency;
+		
+//mask here		
+		
+		audio_send_tone(WAVE_SINE, , hit1.volume, DURATION);
 		//beat_drum(drum_num, DURATION);
 	}
 	if(toggle_play){

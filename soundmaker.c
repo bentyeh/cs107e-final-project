@@ -16,6 +16,8 @@
 #define CLEAR GPIO_PIN23
 
 
+
+
 /* prototypes */
 int get_time_elapsed();
 void set_buttons(int button);
@@ -139,22 +141,22 @@ void soundmaker_vector(unsigned pc){
 	//add up if multiple drums were hit
 	if(d0 > 0){
 		sum += d0;
-		drum += 0;
+		drum += 0b1;
 		num_drums++;
 	}
 	if(d1 > 0){
 		sum += d1;
-		drum += 1;
+		drum += 0b2;
 		num_drums++;
 	}
 	if(d2 > 0){
 		sum += d2;
-		drum += 2;
+		drum += 0b3;
 		num_drums++;
 	}
 	if(d3 > 0){
 		sum += d3;
-		drum += 3;
+		drum += 0b4;
 		num_drums++;
 	}
 	
