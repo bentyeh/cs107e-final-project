@@ -7,8 +7,6 @@
  * Safe if 1 reader (main program, usually) and 1 writer (interrupt handler,
  * usually) are accessing simultaneously.
  */
-
-
 typedef volatile struct hit hit_t;
 typedef volatile struct cir cir_t;
 
@@ -32,15 +30,14 @@ int cir_empty(cir_t *cir);
 int cir_full(cir_t *cir);
 
 // Puts elem at the back of the queue.
-void cir_enqueue(cir_t *cir, hit_t x);
+void cir_enqueue(cir_t *cir, hit_t elem);
 
 // Returns an element from the front of the queue; if there
 // is no element in the queue, spins and waits  (blocks) 
 // until one is enqueued, then returns it
 hit_t cir_dequeue(cir_t *cir);
 
-
-//Clears the circular buffer by setting all the values equal to zero
+// Dequeues all elements
 void cir_clear(cir_t *cir);
 
 #endif
