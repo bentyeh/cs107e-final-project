@@ -1,7 +1,5 @@
 #include "minimath.h"
 
-#define PI_MATH 3.141596
-
 double abs_d(double x) {
     return (x >= 0) ? x : -x;
 }
@@ -10,7 +8,7 @@ int abs_i(int x) {
     return (x >= 0) ? x : -x;
 }
 
-// Round halfway cases away from zero (ex: round(-0.7) == -1)
+// Round halfway cases away from zero (ex: round(-0.5) == -1)
 int round(double x) {
     if(x >= 0)
         return (int)(x + 0.5);
@@ -22,22 +20,22 @@ int floor(double x) {
         return (int)x;
     }
     else {
-        if((int)x - x > 0.5) {
-            return round(x);
+        if(x == (int)x) {
+            return (int)x;
         }
         else {
-            return round(x - 0.5);
+            return (int)(x-1);
         }
     }
 }
 
 int ceil(double x) {
     if(x > 0) {
-        if(x - (int)x > 0.5) {
-            return round(x);
+        if(x == (int)x) {
+            return (int)x;
         }
         else {
-            return round(x + 0.5);
+            return (int)(x+1);
         }
     }
     else {
@@ -86,15 +84,23 @@ double max_d(double x, double y) {
     return (x < y) ? y : x;
 }
 
-int pow(int base, int exp) {
+long double pow(double base, int exp) {
+    double output = 1;
     for(int i = 0; i < exp; i++) {
-        base *= base;
+        output *= base;
     }
-    return base;
+    // printf("%d^%d = %d\n", (int)base, (int)exp, (int)output);
+    return output;
 }
 
-int factorial(int x) {
-    if(x < 0) return 0;
+// factorial() of a negative number is undefined (here, it returns 0)
+// A long int can only completely hold a value of factorial(12) or less
+long int factorial(int x) {
+    // factorial() is only defined for positive numbers
+    if(x < 0) {
+        return 0;
+    }
+
     int result = 1;
     for (int i = 1; i <= x; i++) {
         result *= i;
@@ -102,20 +108,32 @@ int factorial(int x) {
     return result;
 }
 
-// Taylor Series Implementation
+// 5-term Taylor series implementation
+// Number of terms limited by the maximum size of factorial()
 double sin(double x) {
-    double output;
-    int sign;
+    if(x < 0) {
+        return -sin(-x);
+    }
 
-    output = x;
+    long double output = 0;
+    int sign = 0;
+    int final_sign = 1;
+
+    // Reduce x to a equivalent value between 0 and pi
+    // Account for the appropriate sign
+    if(fpart(x/(2*MATH_PI)) > 0.5) {
+        final_sign = -1;
+    }
+    x = x - MATH_PI*(int)(x/MATH_PI);
+
     for(int n = 0; n < 5; n++) {
-        sign = (n % 2) ? 1 : -1;
+        sign = (n % 2) ? -1 : 1;
         output += sign*pow(x,2*n+1)/factorial(2*n+1);
     }
-    return output;
+    return final_sign * output;
 }
 
 // Uses sine to calculate cosine
 double cos(double x){
-    return sin((PI_MATH/2) - x);
+    return sin(MATH_PI/2 - x);
 }
