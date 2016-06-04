@@ -4,6 +4,7 @@
 
 #include "timer.h"
 #include "audio.h"
+#include "minimath.h"
 
 #define BCM2708_PERI_BASE 0x20000000
 #define GPIO_BASE         (BCM2708_PERI_BASE + 0x200000) /* GPIO controller */
@@ -315,4 +316,9 @@ void audio_send_conga(int vol){
 /* Sends the audio tone for a high-hat */
 void audio_send_high_hat(int vol){
 	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ, vol, 1000);
+}
+
+int audio_wave_mixer(int freq1, int freq2){
+  //TODO
+  return 0;
 }
