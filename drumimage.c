@@ -1,9 +1,7 @@
-#include "gl.h"
 #include "drumimage.h"
 #include "malloc.h"
 #include "timer.h"
 #include "minimath.h"
-#include "printf.h"
 
 static unsigned *drum_array; // array of x-values of centers of drums
 static unsigned drum_diameter;
