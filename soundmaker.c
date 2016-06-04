@@ -15,13 +15,7 @@
 #define PLAY GPIO_PIN22
 #define CLEAR GPIO_PIN23
 
-/* Defines for the frequencies of different drums */
-#define TOM_FREQ 120 //full
-#define CYMBAL_FREQ 200 //clank
-#define KICK_FREQ 60 //thump
-#define BONGO_FREQ 80 //approx
-#define CONGA_FREQ 100 //approx
-#define HIGH_HAT_FREQ 10 //sizzle
+
 
 
 /* prototypes */
@@ -29,12 +23,6 @@ int get_time_elapsed();
 void set_buttons(int button);
 
 
-/* hit structure */
-// struct hit {
-// 	int frequency;
-// 	int volume;
-// 	int time_elapsed;
-// };
 
 /* Globals */
 cir_t* cir_record;
@@ -110,8 +98,8 @@ int get_time_elapsed(){
 
 
 //getter functions for main
-int soundmaker_get_frequency(hit_t hit1){
-	int i = hit1.frequency;
+int soundmaker_get_drum(hit_t hit1){
+	int i = hit1.drum;
 	return i;
 }
 
@@ -147,33 +135,35 @@ void soundmaker_vector(unsigned pc){
 	//add up if multiple drums were hit
 	if(d0 > 0){
 		sum += d0;
-		drum += TOM_FREQ;
+		drum += 0b1;
 		num_drums++;
 	}
 	if(d1 > 0){
 		sum += d1;
-		drum += CONGA_FREQ;
+		drum += 0b2;
 		num_drums++;
 	}
 	if(d2 > 0){
 		sum += d2;
-		drum += KICK_FREQ;
+		drum += 0b4;
 		num_drums++;
 	}
 	if(d3 > 0){
 		sum += d3;
-		drum += BONGO_FREQ;
+		drum += 0b8;
 		num_drums++;
 	}
 	
 	//average the frequencies between the drum hits and volumes if more than
 	//one drum was hit
-	int comb_freq = (drum / num_drums);
+	//int comb_freq = (drum / num_drums);
 	int comb_vol = (sum / num_drums);
 	
 	//generate a hit from the drums
 	hit_t hit1;
-	hit1.frequency = comb_freq;
+	//hit1.frequency = comb_freq;
+	value = drum;
+	hit1.drum = drum;
 	hit1.volume = comb_vol;
 	hit1.time_elapsed = 0;
 	
