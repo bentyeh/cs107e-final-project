@@ -32,7 +32,7 @@ int sensors_read_value(unsigned int channel){
 		return -1; //return -1 to indicate error
 	}else{
 		//channel exists, bitshift a one into the SPI instruction
-		set_instruction(channel, instruction[1]);
+		instruction[1] = set_instruction(channel);
 	}
 	unsigned char values[3] = {0,0,0};
 	instruction[1] = instruction[1] << 4; //bit shift the instruction into the upper 4 bits
@@ -44,7 +44,8 @@ int sensors_read_value(unsigned int channel){
 }
 
 /* Helper function to indicate which channel the MCP3008 should read */
-static void set_instruction(unsigned int channel, unsigned char instr){
+static unsigned char set_instruction(unsigned int channel){
+	unsigned char instr = 0;
 	if(channel == 1){
 		instr |= (1 << 1); 
 	}else if(channel == 2){
@@ -65,4 +66,5 @@ static void set_instruction(unsigned int channel, unsigned char instr){
 		instr |= (1 << 2);
 		instr |= (1 << 3);
 	}
+	return instr;
 }
