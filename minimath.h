@@ -23,4 +23,9 @@ int max_i(int x, int y);
 unsigned max_u(unsigned x, unsigned y);
 double max_d(double x, double y);
 
+int pow(int base, int exp);
+int factorial(int x);
+
+double sin(double x);
+
 #endif
