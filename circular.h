@@ -7,12 +7,14 @@
  * Safe if 1 reader (main program, usually) and 1 writer (interrupt handler,
  * usually) are accessing simultaneously.
  */
-typedef volatile struct hit{
-    int frequency;
+
+struct hit {
+	int frequency;
     int volume;
     int time_elapsed;
-}hit_t;
+}
 
+typedef volatile struct hit hit_t;
 typedef volatile struct cir cir_t;
 
 // Allocates and initializes a new circular buffer. To set up a circular buffer
