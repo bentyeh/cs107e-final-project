@@ -11,6 +11,14 @@
  * Date: September 10 2014
  */ 
 
+/* Defines for the frequencies of different drums */
+#define TOM_FREQ 120 //full
+#define CYMBAL_FREQ 200 //clank
+#define KICK_FREQ 60 //thump
+#define BONGO_FREQ 80 //approx
+#define CONGA_FREQ 100 //approx
+#define HIGH_HAT_FREQ 10 //sizzle
+
 typedef enum {
   WAVE_SQUARE,
   WAVE_SINE,
@@ -31,9 +39,6 @@ void audio_send_kick(int vol);
 void audio_send_bongo(int vol);
 void audio_send_conga(int vol);
 void audio_send_high_hat(int vol);
-
-/* Wave Mixing Functions */
-int audio_wave_mixer(int freq1, int freq2);
 
 #endif
 

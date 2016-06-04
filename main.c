@@ -23,19 +23,18 @@
 #define HEIGHT 600
 #define NUM_DRUMS 4
 
-/* Defines for the frequencies of different drums */
-#define TOM_FREQ 120 //full
-#define CYMBAL_FREQ 200 //clank
-#define KICK_FREQ 60 //thump
-#define BONGO_FREQ 80 //approx
-#define CONGA_FREQ 100 //approx
-#define HIGH_HAT_FREQ 10 //sizzle
+/* drumsssss */
+#define DRUM_1 TOM_FREQ
+#define DRUM_2 KICK_FREQ
+#define DRUM_3 BONGO_FREQ
+#define DRUM_4 CONGA_FREQ
 
 // Global variables
 int toggle_play = 0;
 int toggle_stop = 1;
 static int toggle_clear = 0;
 static int beat_delay = 0;
+int DRUM_FREQ[NUM_DRUMS] = {DRUM_1, DRUM_2, DRUM_3, DRUM_4};
 
 // External global variables
 extern int value;
@@ -47,36 +46,56 @@ void main_cycle_sound();
 static void setup_interrupts();
 
 void main(void) {
-  audio_init();
-  sensors_init();
-  gpio_init();
-  soundmaker_init();
- // drumimage_init(WIDTH, HEIGHT, NUM_DRUMS);
-  armtimer_init();
-  armtimer_start(GPROF_TIMER_INTERVAL);
-  setup_interrupts();
-  while(1){
-	if(!cir_empty(cir_freeplay)){
-		//play sound
-		hit_t hit1 = cir_dequeue(cir_freeplay);
-		int drum = hit1.drum;
-		
-//mask here		
-		
-		audio_send_tone(WAVE_SINE, , hit1.volume, DURATION);
-		//beat_drum(drum_num, DURATION);
-	}
-	if(toggle_play){
-		//cycle through the stored buffer and figure out how to deal with delays
-		while(!toggle_stop){
-			main_cycle_sound();
-		}
-		
-	}
-	
-  	printf("value: %d\n", value);
-  }
-	
+    audio_init();
+    sensors_init();
+    gpio_init();
+    soundmaker_init();
+    // drumimage_init(WIDTH, HEIGHT, NUM_DRUMS);
+    armtimer_init();
+    armtimer_start(GPROF_TIMER_INTERVAL);
+    setup_interrupts();
+
+    int freq1, freq2;
+
+    while(1){
+        // Freeplay
+        if(!cir_empty(cir_freeplay)) {
+            // reset frequencies
+            freq1 = 0;
+            freq2 = 0;
+
+            // play sound
+            hit_t hit1 = cir_dequeue(cir_freeplay);
+            for(int i = 0; i < NUM_DRUMS; i++) {
+                if(hit1.drum & (1<<i)) {
+                    if(!freq1) {
+                        freq1 = DRUM_FREQ[i];
+                    }
+                    else if(!freq2) {
+                        freq2 = DRUM_FREQ[i];
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+
+            average_sine(freq1, freq2);
+            // audio_send_tone(WAVE_SINE, , hit1.volume, DURATION);
+    		// beat_drum(drum_num, DURATION);
+        }
+
+        // Playback
+        if(toggle_play) {
+    		// cycle through the stored buffer and figure out how to deal with delays
+            while(!toggle_stop){
+                main_cycle_sound();
+            }
+        }
+
+        // Debugging - print out sensor read value
+        printf("value: %d\n", value);
+    }
 }
 
 
@@ -113,28 +132,23 @@ static void setup_interrupts() {
 //change what is currently happening in the program
 
 void main_vector(unsigned pc){
-  if(pc == (START)){
-  	//initialize a new circular buffer
-  	 soundmaker_new_cir();
-  	 toggle_stop = 0;
-  	// turn on the recording of interrupts
-  	 gpio_check_and_clear_event(START);
-  }else if(pc == (STOP)){
-  	//stop the recording of interrupts
-  	toggle_stop = 1;
-  	gpio_check_and_clear_event(STOP);
-  }else if(pc == (PLAY)){
-  	//cycle through the circular queue
-  	toggle_play = 1;	
-  	gpio_check_and_clear_event(PLAY);
-  }else if(pc == (CLEAR)){
-  	//set all values in the circular queue to zero
-  	toggle_clear = 1;
-  	gpio_check_and_clear_event(CLEAR);
-  }
-  
+    if(pc == (START)){
+      	//initialize a new circular buffer
+        soundmaker_new_cir();
+        toggle_stop = 0;
+      	// turn on the recording of interrupts
+        gpio_check_and_clear_event(START);
+        }else if(pc == (STOP)){
+          	//stop the recording of interrupts
+           toggle_stop = 1;
+           gpio_check_and_clear_event(STOP);
+        }else if(pc == (PLAY)){
+          	//cycle through the circular queue
+           toggle_play = 1;	
+           gpio_check_and_clear_event(PLAY);
+        }else if(pc == (CLEAR)){
+          	//set all values in the circular queue to zero
+           toggle_clear = 1;
+           gpio_check_and_clear_event(CLEAR);
+    }
 }
-
-
-
-
