@@ -12,7 +12,7 @@ typedef volatile struct hit {
 	int drum;
     int volume;
     int time_elapsed;
-}hit_t;
+} hit_t;
  
 typedef volatile struct cir cir_t;
 
