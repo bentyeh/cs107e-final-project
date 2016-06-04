@@ -92,6 +92,7 @@ int pow(int base, int exp) {
 }
 
 int factorial(int x) {
+    if(x < 0) return 0;
     int result = 1;
     for (int i = 1; i <= x; i++) {
         result *= i;
