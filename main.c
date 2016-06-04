@@ -50,7 +50,7 @@ void main(void) {
     sensors_init();
     gpio_init();
     soundmaker_init();
-    // drumimage_init(WIDTH, HEIGHT, NUM_DRUMS);
+    drumimage_init(WIDTH, HEIGHT, NUM_DRUMS);
     armtimer_init();
     armtimer_start(GPROF_TIMER_INTERVAL);
     setup_interrupts();
@@ -77,12 +77,14 @@ void main(void) {
                     else {
                         break;
                     }
+                    printf("i : %d\n", i);
                     beat_drum(i, DURATION);
                     audio_send_tone(WAVE_SINE, freq1, hit1.volume, DURATION);
+                    break;
                 }
             }
 
-            average_sine(freq1, freq2);
+            //average_sine(freq1, freq2);
             // audio_send_tone(WAVE_SINE, , hit1.volume, DURATION);
     		// beat_drum(drum_num, DURATION);
         }

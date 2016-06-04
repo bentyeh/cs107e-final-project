@@ -120,6 +120,7 @@ int soundmaker_get_delay(hit_t hit1){
 we cannot get interrupts directly from SPI*/
 
 void soundmaker_vector(unsigned pc){
+	value = 0;
 	//clear the interrupt
 	armtimer_clear_interrupt();
 	
