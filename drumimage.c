@@ -47,6 +47,16 @@ void beat_drum(unsigned drum_num, unsigned beat_duration) {
     draw_drum(drum_num, RESTING_COLOR);
 }
 
+/*void beat_drum(unsigned drum_mask, unsigned beat_duration) {
+    for(int i = 0; i < NUM_DRUMS; i++) {
+        if(hit1.drum & (1<<i)) {
+            draw_drum(i, BEAT_COLOR);
+        }
+    }
+    delay_us(beat_duration);
+    initialize_drums;
+}*/
+
 void initialize_drums() {
     for(unsigned i = 0; i < num_drums; i++) {
         draw_drum(i, RESTING_COLOR);
