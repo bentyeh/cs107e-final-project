@@ -70,13 +70,6 @@ volatile unsigned* gpio = (void*)GPIO_BASE;
 volatile unsigned* clk  = (void*)CLOCK_BASE;
 volatile unsigned* pwm  = (void*)PWM_BASE;
 
-/* Defines for the frequencies of different drums */
-#define TOM_FREQ 120 //full
-#define CYMBAL_FREQ 200 //clank
-#define KICK_FREQ 60 //thump
-#define BONGO_FREQ 80 //approx
-#define CONGA_FREQ 100 //approx
-#define HIGH_HAT_FREQ 10 //sizzle
 
 #define MAX_VOL_VAL 1024
 
