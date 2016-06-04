@@ -15,14 +15,6 @@
 #define PLAY GPIO_PIN22
 #define CLEAR GPIO_PIN23
 
-/* Defines for the frequencies of different drums */
-#define TOM_FREQ 120 //full
-#define CYMBAL_FREQ 200 //clank
-#define KICK_FREQ 60 //thump
-#define BONGO_FREQ 80 //approx
-#define CONGA_FREQ 100 //approx
-#define HIGH_HAT_FREQ 10 //sizzle
-
 
 /* prototypes */
 int get_time_elapsed();
@@ -168,12 +160,14 @@ void soundmaker_vector(unsigned pc){
 	
 	//average the frequencies between the drum hits and volumes if more than
 	//one drum was hit
-	int comb_freq = (drum / num_drums);
+	//int comb_freq = (drum / num_drums);
 	int comb_vol = (sum / num_drums);
 	
 	//generate a hit from the drums
 	hit_t hit1;
-	hit1.frequency = comb_freq;
+	//hit1.frequency = comb_freq;
+	value = drum;
+	hit1.frequency = drum;
 	hit1.volume = comb_vol;
 	hit1.time_elapsed = 0;
 	
