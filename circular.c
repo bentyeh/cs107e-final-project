@@ -4,14 +4,15 @@
 
 #define CAPACITY 128
 
-extern void malloc_init();
+// extern void malloc_init();
 
-// hit structure
-struct hit {
-    int frequency;
-    int volume;
-    int time_elapsed;
-};
+//// hit structure
+// struct hit {
+//     int frequency;
+//     int volume;
+//     int time_elapsed;
+// };
+// 
 
 struct cir {
     hit_t buf[CAPACITY];

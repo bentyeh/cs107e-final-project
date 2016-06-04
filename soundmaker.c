@@ -1,5 +1,4 @@
 #include "soundmaker.h"
-#include "circular.h"
 #include "armtimer.h"
 #include "gpio.h"
 #include "pwm.h"
@@ -31,14 +30,15 @@ void set_buttons(int button);
 
 
 /* hit structure */
-struct hit {
-	int frequency;
-	int volume;
-	int time_elapsed;
-};
+// struct hit {
+// 	int frequency;
+// 	int volume;
+// 	int time_elapsed;
+// };
 
 /* Globals */
-cir_t* cir;
+cir_t* cir_record;
+cir_t* cir_freeplay;
 static int stored_time;
 static int first_beat_time;
 int value = 0;
@@ -57,8 +57,9 @@ void soundmaker_init(void) {
   	set_buttons(CLEAR);
 	stored_time = 0;
 	first_beat_time = 0;
-	//cir = cir_new();
-
+	cir_record = cir_new();
+	cir_freeplay = cir_new();
+	
 }
 
 /*
@@ -81,11 +82,11 @@ void soundmaker_record_beat(hit_t hit1){
 */
 
 volatile hit_t soundmaker_replay_beat(){
-	if(cir_empty(cir)){
+	if(cir_empty(cir_record)){
 		// return 0;
 	}
-	hit_t hit2 = cir_dequeue(cir);
-	cir_enqueue(cir, hit2);
+	hit_t hit2 = cir_dequeue(cir_record);
+	cir_enqueue(cir_record, hit2);
 	return hit2;
 
 }
@@ -173,7 +174,7 @@ void soundmaker_vector(unsigned pc){
 	//generate a hit from the drums
 	hit_t hit1;
 	hit1.frequency = comb_freq;
-	hit1.volume = comb_volume;
+	hit1.volume = comb_vol;
 	hit1.time_elapsed = 0;
 	
 	//enqueue the hit into the freeplay circular buffer
@@ -182,9 +183,9 @@ void soundmaker_vector(unsigned pc){
 	//enqueue in the recording function
 	if(!toggle_stop)
 			soundmaker_record_beat(hit1);		
-	}
-
 }
+
+
 
 void set_buttons(int button){
 	gpio_set_function(button, GPIO_FUNC_INPUT); 

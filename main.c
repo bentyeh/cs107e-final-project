@@ -19,6 +19,10 @@
 #define CLEAR GPIO_PIN23
 #define GPROF_TIMER_INTERVAL 0x10
 #define DURATION 1000
+#define WIDTH 800
+#define HEIGHT 600
+#define NUM_DRUMS 4
+
 
 /* globals*/
 static void setup_interrupts();
@@ -27,7 +31,10 @@ int toggle_stop = 1;
 static int toggle_clear = 0;
 static int beat_delay = 0;
 
+/*externs*/
 extern int value;
+extern cir_t* cir_record;
+extern cir_t* cir_freeplay;
 
 /*prototypes*/
 void main_cycle_sound();
@@ -37,7 +44,7 @@ void main(void) {
   sensors_init();
   gpio_init();
   soundmaker_init();
- // drumimage_init((unsigned width, unsigned height, unsigned num));
+ // drumimage_init(WIDTH, HEIGHT, NUM_DRUMS);
   armtimer_init();
   armtimer_start(GPROF_TIMER_INTERVAL);
   setup_interrupts();
