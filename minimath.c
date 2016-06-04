@@ -115,5 +115,5 @@ double sin(double x) {
 
 // Uses sine to calculate cosine
 double cos(double x){
-    return 1 - sin(x);
+    return sin((3.141596/2) - x);
 }
