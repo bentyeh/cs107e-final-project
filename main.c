@@ -98,6 +98,7 @@ void main(void) {
         }
 
         // Debugging - print out sensor read value
+        if(value != 0)
         printf("value: %d\n", value);
     }
 }

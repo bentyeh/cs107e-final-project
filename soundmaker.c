@@ -169,7 +169,8 @@ void soundmaker_vector(unsigned pc){
 	hit1.time_elapsed = 0;
 	
 	//enqueue the hit into the freeplay circular buffer
-	cir_enqueue(cir_freeplay, hit1);
+	if(d0 > 0 || d1 > 0 || d2 > 0 || d3 > 0)
+		cir_enqueue(cir_freeplay, hit1);
 	
 	//enqueue in the recording function
 	if(!toggle_stop)
