@@ -30,6 +30,7 @@ cir_t* cir_freeplay;
 static int stored_time;
 static int first_beat_time;
 int value = 0;
+int cnt = 0;
 
 extern int toggle_play; //can i get this from main?
 extern int toggle_stop; //can i get this from main?
@@ -169,9 +170,10 @@ void soundmaker_vector(unsigned pc){
 	hit1.time_elapsed = 0;
 	
 	//enqueue the hit into the freeplay circular buffer
-	if(d0 > 0 || d1 > 0 || d2 > 0 || d3 > 0)
+	if(d0 > 0 || d1 > 0 || d2 > 0 || d3 > 0){
 		cir_enqueue(cir_freeplay, hit1);
-	
+		cnt++;
+	}
 	//enqueue in the recording function
 	if(!toggle_stop)
 			soundmaker_record_beat(hit1);		

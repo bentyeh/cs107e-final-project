@@ -17,7 +17,7 @@
 #define STOP GPIO_PIN21
 #define PLAY GPIO_PIN22
 #define CLEAR GPIO_PIN23
-#define GPROF_TIMER_INTERVAL 0x10
+#define GPROF_TIMER_INTERVAL 0x100
 #define DURATION 1000
 #define WIDTH 800
 #define HEIGHT 600
@@ -40,6 +40,7 @@ int DRUM_FREQ[NUM_DRUMS] = {DRUM_1, DRUM_2, DRUM_3, DRUM_4};
 extern int value;
 extern cir_t* cir_record;
 extern cir_t* cir_freeplay;
+extern int cnt;
 
 // Function prototypes
 void main_cycle_sound();
@@ -96,7 +97,7 @@ void main(void) {
                 main_cycle_sound();
             }
         }
-
+	printf("cnt: %d\n", cnt);
         // Debugging - print out sensor read value
         if(value != 0)
         printf("value: %d\n", value);
