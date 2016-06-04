@@ -147,22 +147,22 @@ void soundmaker_vector(unsigned pc){
 	//add up if multiple drums were hit
 	if(d0 > 0){
 		sum += d0;
-		drum += TOM_FREQ;
+		drum += 0;
 		num_drums++;
 	}
 	if(d1 > 0){
 		sum += d1;
-		drum += CONGA_FREQ;
+		drum += 1;
 		num_drums++;
 	}
 	if(d2 > 0){
 		sum += d2;
-		drum += KICK_FREQ;
+		drum += 2;
 		num_drums++;
 	}
 	if(d3 > 0){
 		sum += d3;
-		drum += BONGO_FREQ;
+		drum += 3;
 		num_drums++;
 	}
 	
