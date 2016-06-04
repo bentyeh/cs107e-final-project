@@ -3,6 +3,7 @@
 #include "assert.h"
 #include "timer.h"
 #include "drumimage.h"
+#include "minimath.h"
 
 /* Note that to use the console, one should only have to
  * call console_init. To use the graphics library, one
@@ -31,10 +32,25 @@ void test_gl() {
     }
 }
 
+void test_math() {
+    printf("pow(1,5) = %d\n", (int)pow(1,5));
+    printf("pow(2,5) = %d\n", (int)pow(2,5));
+    printf("factorial(5) = %d\n", factorial(5));
+    printf("factorial(0) = %d\n", factorial(0));
+    printf("factorial(-1) = %d\n", factorial(-1));
+    for(int i = 0; i < 4*MATH_PI; i+= (4*MATH_PI/12)) {
+        printf("cos(-%d) = %d\n", (int)(1000*i), (int)(1000*cos(-i)));
+    }
+}
+
 void main() {
     delay(3);
 
-    printf("Beginning graphics testing...\n");
-    test_gl();
-    printf("Graphics testing finished.\n");
+    // printf("Beginning graphics testing...\n");
+    // test_gl();
+    // printf("Graphics testing finished.\n");
+
+    printf("Beginning math testing...\n");
+    test_math();
+    printf("Math testing finished.\n");
 }
