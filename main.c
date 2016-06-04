@@ -23,21 +23,20 @@
 #define HEIGHT 600
 #define NUM_DRUMS 4
 
-
-/* globals*/
-static void setup_interrupts();
+// Global variables
 int toggle_play = 0;
 int toggle_stop = 1;
 static int toggle_clear = 0;
 static int beat_delay = 0;
 
-/*externs*/
+// External global variables
 extern int value;
 extern cir_t* cir_record;
 extern cir_t* cir_freeplay;
 
-/*prototypes*/
+// Function prototypes
 void main_cycle_sound();
+static void setup_interrupts();
 
 void main(void) {
   audio_init();
