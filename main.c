@@ -77,6 +77,8 @@ void main(void) {
                     else {
                         break;
                     }
+                    beat_drum(i, DURATION);
+                    audio_send_tone(WAVE_SINE, freq1, hit1.volume, DURATION);
                 }
             }
 
