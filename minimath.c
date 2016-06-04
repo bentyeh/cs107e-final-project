@@ -93,8 +93,8 @@ int pow(int base, int exp) {
 
 int factorial(int x) {
     int result = 1;
-    for (int i = 1; i <= n; i++) {
-    result *= i;
+    for (int i = 1; i <= x; i++) {
+        result *= i;
     }
     return result;
 }
@@ -110,4 +110,9 @@ double sin(double x) {
         output += sign*pow(x,2*n+1)/factorial(2*n+1);
     }
     return output;
+}
+
+// Uses sine to calculate cosine
+double cos(double x){
+    return 1 - sin(x);
 }

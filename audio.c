@@ -310,3 +310,10 @@ void audio_send_conga(int vol){
 void audio_send_high_hat(int vol){
 	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ, vol, 1000);
 }
+
+int audio_wave_mixer(int freq1, int freq2){
+  //TODO
+
+  
+  return 0;
+}
