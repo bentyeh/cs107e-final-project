@@ -1,5 +1,7 @@
 #include "minimath.h"
 
+#define PI_MATH 3.141596
+
 double abs_d(double x) {
     return (x >= 0) ? x : -x;
 }
@@ -115,5 +117,5 @@ double sin(double x) {
 
 // Uses sine to calculate cosine
 double cos(double x){
-    return sin((3.141596/2) - x);
+    return sin((PI_MATH/2) - x);
 }

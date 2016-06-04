@@ -40,7 +40,7 @@ void audio_send_bongo(int vol);
 void audio_send_conga(int vol);
 void audio_send_high_hat(int vol);
 
-int audio_wave_mixer(int freq1, int freq2);
+int audio_send_mix_wave(int freq1, int freq2);
 
 #endif
 

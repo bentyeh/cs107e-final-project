@@ -311,9 +311,12 @@ void audio_send_high_hat(int vol){
 	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ, vol, 1000);
 }
 
-int audio_wave_mixer(int freq1, int freq2){
+int audio_send_mix_wave(int freq1, int freq2){
   //TODO
-
+  // 2Acos((f1 - f2)/2)tcos((f1 + f2)/2)t
+  if(freq2 == 0){
+    
+  }
   
   return 0;
 }
