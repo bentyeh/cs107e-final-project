@@ -25,6 +25,9 @@ int max_i(int x, int y);
 unsigned max_u(unsigned x, unsigned y);
 double max_d(double x, double y);
 
+//gets the min of an array of ints
+int min_arr(int array[], int length);
+
 long double pow(double base, int exp);
 
 // factorial() of a negative number is undefined (here, it returns 0)
@@ -33,5 +36,8 @@ long int factorial(int x);
 
 double sin(double x);
 double cos(double x);
+ 
+ //gets and returns the greates common denominator of two numbers
+int gcd(int a, int b);
 
 #endif

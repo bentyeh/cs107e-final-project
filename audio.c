@@ -311,12 +311,93 @@ void audio_send_high_hat(int vol){
 	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ, vol, 1000);
 }
 
-int audio_send_mix_wave(int freq1, int freq2){
-  //TODO
-  // 2Acos((f1 - f2)/2)tcos((f1 + f2)/2)t
-  if(freq2 == 0){
-    
-  }
+/* Helper for sending mixed audio waves */
+void audio_send_wave(unsigned wave, unsigned int hz, int volume, int note_duration) {
+  unsigned* waveform;
+  *waveform = wave;
   
-  return 0;
+  if (audio_set_clock(hz)) {
+    // Start the clock
+    // enable (ENAB) + oscillator 
+    // raspbian has this as plla
+    *(clk + BCM2835_PWMCLK_CNTL) = PM_PASSWORD |
+      BCM2835_CM_ENAB |
+      BCM2835_CM_OSCILLATOR;
+    
+    delay_us(2000);
+    
+    // disable PWM
+    *(pwm + BCM2835_PWM_CONTROL) = 0;
+    
+    delay_us(2000);
+    
+    // We are dividing each "step" of the sinusoid into 128
+    // pulse slots.
+    *(pwm+BCM2835_PWM0_RANGE) = 0x80;
+    *(pwm+BCM2835_PWM1_RANGE) = 0x80;
+
+    // Re-enable PWM
+    *(pwm+BCM2835_PWM_CONTROL) =
+      BCM2835_PWM1_USEFIFO | 
+      BCM2835_PWM1_ENABLE | 
+      BCM2835_PWM0_USEFIFO | 
+      BCM2835_PWM0_ENABLE |
+      1 << 6; // Clear the FIFO of any old data
+    
+    delay_us(2000);
+
+    int i = 0;
+    
+    int audio_tick = 0;
+    while(audio_tick < note_duration) {
+      int status =  *(pwm + BCM2835_PWM_STATUS);
+      
+      if (!(status & BCM2835_FULL1)) {
+        *(pwm+BCM2835_PWM_FIFO) = ((waveform[i] * volume) / MAX_VOL_VAL);
+        i++;
+        i = i % 64;
+      }
+      if ((status & ERRORMASK)) {
+        *(pwm+BCM2835_PWM_STATUS) = ERRORMASK;
+      }
+      audio_tick++; 
+    }
+  }
+}
+
+
+// Mixes two waves of different frequencies and sends the output to the audio jack
+// The second frequency may be zero but not the first
+int audio_send_mix_wave(int freq1, int freq2, int volume, int duration){
+  //Pseudocode:
+    //find greatest common denominator, set as wave frequency
+    //calculate the sine waveform based on the hz for each frequency
+    //add the wafeforms at each point (assuming in sync)
+    //shift all points of the final waveform up by its lowest value
+    //return 1 if successful, 0 otherwise
+  
+  if(freq1 == 0) return 0; //return error if the first frequency is 0
+  //special case for if the second frequency is 0
+  if(freq2== 0){
+    audio_send_tone(waveform_sine, freq1, volume, duration);
+    return 1;
+  }
+
+  int wave_final[64];
+  int freq = gcd(freq1, freq2);
+  int adjuster = 64 / (2 * MATH_PI * 64);
+
+  for(int i = 0; i < 64; i++){
+    wave_final[i] = sin(freq1 * 2 * MATH_PI * adjuster) + sin(freq2 * 2 * MATH_PI * adjuster);
+    wave_final[i] = wave_final[i] * waveform_sine[i]; //multiply by the base sine wave provided by Phil
+    adjuster += adjuster;
+  }
+  //shift all values up so there are no negative values
+  int min = min_arr(wave_final, 64);
+  for(int i = 0; i < 64; i++){
+    wave_final[i] += min;
+  }
+
+  audio_send_wave(wave_final, freq, volume, duration);
+  return 1;
 }
