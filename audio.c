@@ -77,7 +77,73 @@ volatile unsigned* pwm  = (void*)PWM_BASE;
 unsigned waveform_square[64];
 unsigned waveform_triangle[64];
 unsigned waveform_saw[64];
-unsigned waveform_sine[];
+// This is a sinusoid represented as 64 values in the range of [-32, 32]
+unsigned waveform_sine[] = {32,
+                       35,
+                       38,
+                       41,
+                       44,
+                       47,
+                       49,
+                       52,
+                       54,
+                       56,
+                       58,
+                       60,
+                       61,
+                       62,
+                       63,
+                       64,
+                       64,
+                       63,
+                       63,
+                       62,
+                       61,
+                       60,
+                       58,
+                       56,
+                       54,
+                       52,
+                       49,
+                       47,
+                       44,
+                       41,
+                       38,
+                       35,
+                       32,
+                       29,
+                       26,
+                       23,
+                       20,
+                       17,
+                       15,
+                       12,
+                       10,
+                       8,
+                       6,
+                       4,
+                       3,
+                       2,
+                       1,
+                       1,
+                       0,
+                       1,
+                       1,
+                       2,
+                       3,
+                       4,
+                       6,
+                       8,
+                       10,
+                       12,
+                       15,
+                       17,
+                       20,
+                       23,
+                       26,
+                       29,
+                       32
+};
 
 /* This PWM module scales the 19.2MHz clock down to 8.192MHz.
    It respresents a signal as 8192 PWM pulses: 64 samples of
@@ -208,113 +274,45 @@ void audio_init() {
   }
 }
 
-// This is a sinusoid represented as 64 values in the range of [-32, 32]
-unsigned waveform_sine[] = {32,
-                       35,
-                       38,
-                       41,
-                       44,
-                       47,
-                       49,
-                       52,
-                       54,
-                       56,
-                       58,
-                       60,
-                       61,
-                       62,
-                       63,
-                       64,
-                       64,
-                       63,
-                       63,
-                       62,
-                       61,
-                       60,
-                       58,
-                       56,
-                       54,
-                       52,
-                       49,
-                       47,
-                       44,
-                       41,
-                       38,
-                       35,
-                       32,
-                       29,
-                       26,
-                       23,
-                       20,
-                       17,
-                       15,
-                       12,
-                       10,
-                       8,
-                       6,
-                       4,
-                       3,
-                       2,
-                       1,
-                       1,
-                       0,
-                       1,
-                       1,
-                       2,
-                       3,
-                       4,
-                       6,
-                       8,
-                       10,
-                       12,
-                       15,
-                       17,
-                       20,
-                       23,
-                       26,
-                       29,
-                       32
-};
-
 //test tone function
 void audio_send_1kHz() {
   audio_send_tone(WAVE_SINE, 1000, 1024, 1000);
 }
 
 /* Sends the audio tone for a tom drum */
-void audio_send_tom(int vol){
-	audio_send_tone(WAVE_SINE, TOM_FREQ, vol, 1000);
-}
+// void audio_send_tom(int vol){
+// 	audio_send_tone(WAVE_SINE, TOM_FREQ, vol, 1000);
+// }
 
 /* Sends the audio tone for a cymbal */
-void audio_send_cymbal(int vol){
-	audio_send_tone(WAVE_SINE, CYMBAL_FREQ, vol, 1000);
-}
+// void audio_send_cymbal(int vol){
+// 	audio_send_tone(WAVE_SINE, CYMBAL_FREQ, vol, 1000);
+// }
 
 /* Sends the audio tone for a kick drum */
-void audio_send_kick(int vol){
-	audio_send_tone(WAVE_SINE, KICK_FREQ, vol, 1000);
-}
+// void audio_send_kick(int vol){
+// 	audio_send_tone(WAVE_SINE, KICK_FREQ, vol, 1000);
+// }
 
 /*Sends the audio tone for a bongo drum */
-void audio_send_bongo(int vol){
-	audio_send_tone(WAVE_SINE, BONGO_FREQ, vol, 1000);
-}
+// void audio_send_bongo(int vol){
+// 	audio_send_tone(WAVE_SINE, BONGO_FREQ, vol, 1000);
+// }
 
 /* Sends the audio tone for a conga drum */
-void audio_send_conga(int vol){
-	audio_send_tone(WAVE_SINE, CONGA_FREQ, vol, 1000);
-}
+// void audio_send_conga(int vol){
+// 	audio_send_tone(WAVE_SINE, CONGA_FREQ, vol, 1000);
+// }
 
 /* Sends the audio tone for a high-hat */
-void audio_send_high_hat(int vol){
-	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ, vol, 1000);
-}
+// void audio_send_high_hat(int vol){
+// 	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ, vol, 1000);
+// }
 
 /* Helper for sending mixed audio waves */
-void audio_send_wave(unsigned wave, unsigned int hz, int volume, int note_duration) {
-  unsigned* waveform;
-  *waveform = wave;
+static void audio_send_wave(unsigned wave, unsigned int hz, int volume, int note_duration) {
+  unsigned* waveform; //will cause 'uninitialized warning -> ignore'
+   waveform = wave;
   
   if (audio_set_clock(hz)) {
     // Start the clock
@@ -375,11 +373,11 @@ int audio_send_mix_wave(int freq1, int freq2, int volume, int duration){
     //add the wafeforms at each point (assuming in sync)
     //shift all points of the final waveform up by its lowest value
     //return 1 if successful, 0 otherwise
-  
+
   if(freq1 == 0) return 0; //return error if the first frequency is 0
   //special case for if the second frequency is 0
   if(freq2== 0){
-    audio_send_tone(waveform_sine, freq1, volume, duration);
+    audio_send_tone(WAVE_SINE, freq1, volume, duration);
     return 1;
   }
 
@@ -398,6 +396,6 @@ int audio_send_mix_wave(int freq1, int freq2, int volume, int duration){
     wave_final[i] += min;
   }
 
-  audio_send_wave(wave_final, freq, volume, duration);
+  audio_send_wave( (unsigned) wave_final, freq, volume, duration);
   return 1;
 }

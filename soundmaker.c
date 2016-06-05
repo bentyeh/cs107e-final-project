@@ -175,8 +175,8 @@ void soundmaker_vector(unsigned pc){
 		cnt++;
 	}
 	//enqueue in the recording function
-	if(!toggle_stop)
-			soundmaker_record_beat(hit1);		
+	// if(!toggle_stop)
+	// 		soundmaker_record_beat(hit1);		
 }
 
 

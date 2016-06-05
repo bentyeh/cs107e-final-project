@@ -20,5 +20,7 @@ int soundmaker_get_delay(hit_t hit1);
 void soundmaker_new_cir();
 void soundmaker_clear_cir();
 
+void soundmaker_vector(unsigned pc);
+
 
 #endif
