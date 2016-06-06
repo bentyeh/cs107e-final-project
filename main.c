@@ -12,29 +12,30 @@
 #include "audio.h"
 #include "tone.h"
 #include "drumimage.h"
+#include "pitch.h"
 
 #define START GPIO_PIN20
 #define STOP GPIO_PIN21
 #define PLAY GPIO_PIN22
 #define CLEAR GPIO_PIN23
 #define GPROF_TIMER_INTERVAL 0x100
-#define DURATION 1000
+#define DURATION 3000
 #define WIDTH 800
 #define HEIGHT 600
-#define NUM_DRUMS 4
+#define NUM_KEYS 7
 
 /* drumsssss */
-#define DRUM_1 TOM_FREQ
-#define DRUM_2 KICK_FREQ
-#define DRUM_3 BONGO_FREQ
-#define DRUM_4 CONGA_FREQ
+// #define KEY_A TOM_FREQ
+// #define KEY_B KICK_FREQ
+// #define KEY_C BONGO_FREQ
+// #define DRUM_4 CONGA_FREQ
 
 // Global variables
 int toggle_play = 0;
 int toggle_stop = 1;
 static int toggle_clear = 0;
 static int beat_delay = 0;
-int DRUM_FREQ[NUM_DRUMS] = {DRUM_1, DRUM_2, DRUM_3, DRUM_4};
+int KEY_FREQ[NUM_KEYS] = {NOTE_C6, NOTE_D6, NOTE_E6, NOTE_F6, NOTE_G6, NOTE_A6, NOTE_B6};
 
 // External global variables
 extern int value;
@@ -46,50 +47,45 @@ extern int cnt;
 void main_cycle_sound();
 static void setup_interrupts();
 
-void main(void) {
+static void main_init(){
     audio_init();
     sensors_init();
     gpio_init();
     soundmaker_init();
-    drumimage_init(WIDTH, HEIGHT, NUM_DRUMS);
+    drumimage_init(WIDTH, HEIGHT, NUM_KEYS);
     armtimer_init();
     armtimer_start(GPROF_TIMER_INTERVAL);
     setup_interrupts();
+}
 
+void main(void) {
+    main_init();
     int freq1, freq2;
-
     while(1){
         // Freeplay
         if(!cir_empty(cir_freeplay)) {
             // reset frequencies
             freq1 = 0;
             freq2 = 0;
-
             // play sound
             hit_t hit1 = cir_dequeue(cir_freeplay);
-            for(int i = 0; i < NUM_DRUMS; i++) {
+            for(int i = 0; i < NUM_KEYS; i++) {
                 if(hit1.drum & (1<<i)) {
                     if(!freq1) {
-                        freq1 = DRUM_FREQ[i];
+                        freq1 = KEY_FREQ[i];
                     }
                     else if(!freq2) {
-                        freq2 = DRUM_FREQ[i];
+                        freq2 = KEY_FREQ[i];
                     }
                     else {
                         break;
                     }
-                    printf("i : %d\n", i);
                     beat_drum(i, DURATION);
-                    audio_send_tone(WAVE_SINE, freq1, hit1.volume, DURATION);
+                    audio_send_tone(WAVE_SINE, freq1, hit1.volume);
                     break;
                 }
             }
-
-            //average_sine(freq1, freq2);
-            // audio_send_tone(WAVE_SINE, , hit1.volume, DURATION);
-    		// beat_drum(drum_num, DURATION);
         }
-
         // Playback
         if(toggle_play) {
     		// cycle through the stored buffer and figure out how to deal with delays
@@ -97,10 +93,6 @@ void main(void) {
                 main_cycle_sound();
             }
         }
-	printf("cnt: %d\n", cnt);
-        // Debugging - print out sensor read value
-        if(value != 0)
-        printf("value: %d\n", value);
     }
 }
 
@@ -115,7 +107,7 @@ void main_cycle_sound(){
 	cir_enqueue(cir_record, play_out);
 	int delay_time = play_out.time_elapsed;
 	delay(delay_time);
-	audio_send_tone(WAVE_SINE, play_out.drum, play_out.volume, DURATION);
+	audio_send_tone(WAVE_SINE, play_out.drum, play_out.volume);
 }
 
 

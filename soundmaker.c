@@ -8,6 +8,7 @@
 #include "sensors.h" 
 #include "tone.h"
 #include "audio.h"
+#include "printf.h"
 
 
 #define START GPIO_PIN20
@@ -32,8 +33,14 @@ static int first_beat_time;
 int value = 0;
 int cnt = 0;
 
+static int d0_prev = 0;
+static int d1_prev = 0;
+static int d2_prev = 0;
+static int d3_prev = 0;
+
 extern int toggle_play; //can i get this from main?
 extern int toggle_stop; //can i get this from main?
+extern int ambient_vibration = 0; //global var to get the ambient viration of the room to calibrate
 
 /*
  * initialize the sound maker
@@ -48,7 +55,7 @@ void soundmaker_init(void) {
 	first_beat_time = 0;
 	cir_record = cir_new();
 	cir_freeplay = cir_new();
-	
+	ambient_vibration = sensors_get_ambient_vibration(3000); //sample the room for calibration
 }
 
 /*
@@ -120,6 +127,9 @@ int soundmaker_get_delay(hit_t hit1){
 /*This is a timer interrupt that fires to see if the drums were hit because
 we cannot get interrupts directly from SPI*/
 
+/* just play the note when we see an increase greater than 100 
+Need to remember how mush it was the last time the interrupt checked */
+
 void soundmaker_vector(unsigned pc){
 	value = 0;
 	//clear the interrupt
@@ -130,27 +140,42 @@ void soundmaker_vector(unsigned pc){
 	
 	//check how hard each drum was hit
 	int d0 = sensors_read_value(0);
+	printf("A2C 0 value: %d\n", d0);
+	d0 -= ambient_vibration;
+	printf("A2C 0 adjusted: %d\n", d0);		
+
 	int d1 = sensors_read_value(1);
+	printf("A2C 1 value: %d\n", d1);
+	d1 -= ambient_vibration;
+	printf("A2C 1 adjusted: %d\n", d1);
+
 	int d2 = sensors_read_value(2);
+	printf("A2C 2 value: %d\n", d2);
+	d2 -= ambient_vibration;
+	printf("A2C 2 adjusted: %d\n", d2);
+
 	int d3 = sensors_read_value(3);
-	
+	printf("A2C 3 value: %d\n", d3);
+	d3 -= ambient_vibration;
+	printf("A2C 3 adjusted: %d\n", d3);
+
 	//add up if multiple drums were hit
-	if(d0 > 0){
+	if(d0 > 800){
 		sum += d0;
 		drum += 1;
 		num_drums++;
 	}
-	if(d1 > 0){
+	if(d1 > 800){
 		sum += d1;
 		drum += 2;
 		num_drums++;
 	}
-	if(d2 > 0){
+	if(d2 > 800){
 		sum += d2;
 		drum += 4;
 		num_drums++;
 	}
-	if(d3 > 0){
+	if(d3 > 800){
 		sum += d3;
 		drum += 8;
 		num_drums++;
@@ -170,13 +195,20 @@ void soundmaker_vector(unsigned pc){
 	hit1.time_elapsed = 0;
 	
 	//enqueue the hit into the freeplay circular buffer
-	if(d0 > 0 || d1 > 0 || d2 > 0 || d3 > 0){
+	//The idea of this if condition is to evaluate if there was a hit, and not just bouncing
+	// if((d0 > 800 && (d0 - d0_prev) > 10) || (d1 > 800 && (d1 - d1_prev) > 10) || 
+	// 	(d2 > 800 && (d2 - d2_prev) > 10) || (d3 > 800 && (d3 - d3_prev) > 10)){
+	if(d0 > 800 || d1 > 800 || d2 > 800 || d3 > 800){
 		cir_enqueue(cir_freeplay, hit1);
 		cnt++;
 	}
+	d0_prev = d0;
+	d1_prev = d1;
+	d2_prev = d2;
+	d3_prev = d3;
 	//enqueue in the recording function
 	// if(!toggle_stop)
-	// 		soundmaker_record_beat(hit1);		
+	// 		soundmaker_record_beat(hit1);
 }
 
 
@@ -194,4 +226,21 @@ void soundmaker_new_cir(){
 
 void soundmaker_clear_cir(){
 	cir_clear(cir_record);
+}
+
+//Please do not remove, they are used to get the previous value of the channel
+int get_d0_prev(){
+	return d0_prev;
+}
+
+int get_d1_prev(){
+	return d1_prev;
+}
+
+int get_d2_prev(){
+	return d2_prev;
+}
+
+int get_d3_prev(){
+	return d3_prev;
 }

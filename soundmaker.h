@@ -22,5 +22,9 @@ void soundmaker_clear_cir();
 
 void soundmaker_vector(unsigned pc);
 
+int get_d0_prev(void);
+int get_d1_prev(void);
+int get_d2_prev(void);
+int get_d3_prev(void);
 
 #endif

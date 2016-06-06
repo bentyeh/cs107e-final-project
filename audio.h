@@ -28,7 +28,7 @@ typedef enum {
 
 void audio_init();
 void audio_send_1kHz();
-void audio_send_tone(wave_type_t type, unsigned int hz, int volume, int note_duration);
+void audio_send_tone(wave_type_t type, unsigned int hz, int volume);
 unsigned int audio_max_tone_hz();
 unsigned int audio_min_tone_hz();
 
@@ -40,7 +40,7 @@ unsigned int audio_min_tone_hz();
 // void audio_send_conga(int vol);
 // void audio_send_high_hat(int vol);
 
-int audio_send_mix_wave(int freq1, int freq2, int volume, int duration);
+int audio_send_mix_wave(int freq1, int freq2, int volume);
 
 #endif
 

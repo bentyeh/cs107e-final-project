@@ -196,11 +196,11 @@ unsigned int audio_set_clock(unsigned int frequency) {
 
 This is a generic send tone function that allows the caller to indicate
 the wave shape, frequency, and volume (through modifying the waveform amplitude)
-The note duration parameter is currently in ticks of the armtimer
+The tone is played for the length of a quarter note
 */
 
 
-void audio_send_tone(wave_type_t type, unsigned int hz, int volume, int note_duration) {
+void audio_send_tone(wave_type_t type, unsigned int hz, int volume) {
   unsigned* waveform;
   if (type == WAVE_TRIANGLE) {
     waveform = waveform_triangle;
@@ -244,8 +244,8 @@ void audio_send_tone(wave_type_t type, unsigned int hz, int volume, int note_dur
 
     int i = 0;
     
-    int audio_tick = 0;
-    while(audio_tick < note_duration) {
+    int tone_start = timer_get_time();
+    while((timer_get_time() - tone_start) < (100000 / 4)) {
       int status =  *(pwm + BCM2835_PWM_STATUS);
       
       if (!(status & BCM2835_FULL1)) {
@@ -255,8 +255,7 @@ void audio_send_tone(wave_type_t type, unsigned int hz, int volume, int note_dur
       }
       if ((status & ERRORMASK)) {
         *(pwm+BCM2835_PWM_STATUS) = ERRORMASK;
-      }
-      audio_tick++; 
+      } 
     }
   }
 }
@@ -276,7 +275,7 @@ void audio_init() {
 
 //test tone function
 void audio_send_1kHz() {
-  audio_send_tone(WAVE_SINE, 1000, 1024, 1000);
+  audio_send_tone(WAVE_SINE, 1000, 1024);
 }
 
 /* Sends the audio tone for a tom drum */
@@ -310,7 +309,7 @@ void audio_send_1kHz() {
 // }
 
 /* Helper for sending mixed audio waves */
-static void audio_send_wave(unsigned wave, unsigned int hz, int volume, int note_duration) {
+static void audio_send_wave(unsigned wave, unsigned int hz, int volume) {
   unsigned* waveform; //will cause 'uninitialized warning -> ignore'
    waveform = wave;
   
@@ -346,8 +345,8 @@ static void audio_send_wave(unsigned wave, unsigned int hz, int volume, int note
 
     int i = 0;
     
-    int audio_tick = 0;
-    while(audio_tick < note_duration) {
+    int tone_start = timer_get_time();
+    while((timer_get_time - tone_start) < (100000 / 4)) {
       int status =  *(pwm + BCM2835_PWM_STATUS);
       
       if (!(status & BCM2835_FULL1)) {
@@ -358,7 +357,6 @@ static void audio_send_wave(unsigned wave, unsigned int hz, int volume, int note
       if ((status & ERRORMASK)) {
         *(pwm+BCM2835_PWM_STATUS) = ERRORMASK;
       }
-      audio_tick++; 
     }
   }
 }
@@ -366,7 +364,7 @@ static void audio_send_wave(unsigned wave, unsigned int hz, int volume, int note
 
 // Mixes two waves of different frequencies and sends the output to the audio jack
 // The second frequency may be zero but not the first
-int audio_send_mix_wave(int freq1, int freq2, int volume, int duration){
+int audio_send_mix_wave(int freq1, int freq2, int volume){
   //Pseudocode:
     //find greatest common denominator, set as wave frequency
     //calculate the sine waveform based on the hz for each frequency
@@ -377,7 +375,7 @@ int audio_send_mix_wave(int freq1, int freq2, int volume, int duration){
   if(freq1 == 0) return 0; //return error if the first frequency is 0
   //special case for if the second frequency is 0
   if(freq2== 0){
-    audio_send_tone(WAVE_SINE, freq1, volume, duration);
+    audio_send_tone(WAVE_SINE, freq1, volume);
     return 1;
   }
 
@@ -396,6 +394,6 @@ int audio_send_mix_wave(int freq1, int freq2, int volume, int duration){
     wave_final[i] += min;
   }
 
-  audio_send_wave( (unsigned) wave_final, freq, volume, duration);
+  audio_send_wave( (unsigned) wave_final, freq, volume);
   return 1;
 }
