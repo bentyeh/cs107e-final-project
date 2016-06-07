@@ -213,7 +213,6 @@ void soundmaker_vector2(unsigned pc){
 
 	int d6 = sensors_read_value(6);
 
-	value = d1;
 	
 	
 	//add up if multiple drums were hit
@@ -239,17 +238,17 @@ void soundmaker_vector2(unsigned pc){
 	}
 	if(d4 > 0){
 		sum += d4;
-		drum += 8;
+		drum += 16;
 		num_drums++;
 	}
 	if(d5 > 0){
 		sum += d5;
-		drum += 8;
+		drum += 32;
 		num_drums++;
 	}
 	if(d6 > 0){
 		sum += d6;
-		drum += 8;
+		drum += 64;
 		num_drums++;
 	}
 	
