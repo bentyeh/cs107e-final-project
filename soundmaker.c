@@ -216,51 +216,64 @@ void soundmaker_vector2(unsigned pc){
 	
 	
 	//add up if multiple drums were hit
-	if(d0 > 0){
-		sum += d0;
-		drum += 1;
-		num_drums++;
-	}
-	if(d1 > 0){
-		sum += d1;
-		drum += 2;
-		num_drums++;
-	}
-	if(d2 > 0){
-		sum += d2;
-		drum += 4;
-		num_drums++;
-	}
-	if(d3 > 0){
-		sum += d3;
-		drum += 8;
-		num_drums++;
-	}
-	if(d4 > 0){
-		sum += d4;
-		drum += 16;
-		num_drums++;
-	}
-	if(d5 > 0){
-		sum += d5;
-		drum += 32;
-		num_drums++;
-	}
-	if(d6 > 0){
-		sum += d6;
-		drum += 64;
-		num_drums++;
-	}
-	
-
-	int comb_vol = (sum / num_drums);
-
-	hit1.drum = drum;
-	hit1.volume = comb_vol;
-	hit1.time_elapsed = 0;
+	// if(d0 > 0){
+// 		sum += d0;
+// 		drum += 1;
+// 		num_drums++;
+// 	}
+// 	if(d1 > 0){
+// 		sum += d1;
+// 		drum += 2;
+// 		num_drums++;
+// 	}
+// 	if(d2 > 0){
+// 		sum += d2;
+// 		drum += 4;
+// 		num_drums++;
+// 	}
+// 	if(d3 > 0){
+// 		sum += d3;
+// 		drum += 8;
+// 		num_drums++;
+// 	}
+// 	if(d4 > 0){
+// 		sum += d4;
+// 		drum += 16;
+// 		num_drums++;
+// 	}
+// 	if(d5 > 0){
+// 		sum += d5;
+// 		drum += 32;
+// 		num_drums++;
+// 	}
+// 	if(d6 > 0){
+// 		sum += d6;
+// 		drum += 64;
+// 		num_drums++;
+// 	}
+// 	
+// 
+// 	int comb_vol = (sum / num_drums);
+// 
+// 	hit1.drum = drum;
+// 	hit1.volume = comb_vol;
+// 	hit1.time_elapsed = 0;
 	
 	//cir_enqueue(cir_freeplay, hit1);
 	//printf("hit sum %d\n", hit1.volume);
+	
+	for(int i = 0; i < num_keys; i++){
+		if(sensor_read_value(i) > SENSOR_THRESHOLD){
+			hit1.drum = i;
+			hit1.volume = sensor_read_value(i);
+			hit1.time_elapsed = 0;
+			return;
+		}
+	
+	
+	}
+	
+	
 }
 
 void set_buttons(int button){

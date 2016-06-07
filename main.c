@@ -70,21 +70,29 @@ void main(void) {
             // play sound
             hit_t hit5 = cir_dequeue(cir_freeplay);
             for(int i = 0; i < NUM_KEYS; i++) {
-                if(hit5.drum & (1<<i)) {
-                    if(!freq1) {
-                        freq1 = KEY_FREQ[i];
-                    }
-                    else if(!freq2) {
-                        freq2 = KEY_FREQ[i];
-                    }
-                    else {
-                        break;
-                    }
-                    beat_drum(i, DURATION);
-                    audio_send_mix_wave(freq1, freq2, hit5.volume);
-                    break;
-                }
+            	if(hit5.drum == i){
+            		beat_drum(i, DURATION);
+            		freq1 = KEY_FREQ[i];
+            		audio_send_mix_wave(freq1, 0, hit5.volume);
+            	}
+            
             }
+            // for(int i = 0; i < NUM_KEYS; i++) {
+//                 if(hit5.drum & (1<<i)) {
+//                     if(!freq1) {
+//                         freq1 = KEY_FREQ[i];
+//                     }
+//                     else if(!freq2) {
+//                         freq2 = KEY_FREQ[i];
+//                     }
+//                     else {
+//                         break;
+//                     }
+//                     beat_drum(i, DURATION);
+//                     audio_send_mix_wave(freq1, freq2, hit5.volume);
+//                     break;
+//                 }
+//             }
         //}
         // Playback
 //         if(toggle_play) {
