@@ -71,6 +71,6 @@ void main() {
 
     // Test reading bits into GPIO
     keyboard_init();
-    printf("Waiting for bits...")
+    printf("Waiting for bits...");
     test_keyboard_read_scancode();
 }

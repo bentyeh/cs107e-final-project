@@ -1,5 +1,6 @@
 #include "circular.h"
 #include "malloc.h"
+#include "printf.h"
 #include "assert.h"
 
 #define CAPACITY 128
