@@ -81,7 +81,7 @@ void main(void) {
                         break;
                     }
                     beat_drum(i, DURATION);
-                    audio_send_tone(WAVE_SINE, freq1, hit1.volume);
+                    audio_send_mix_wave(freq1, freq2, hit1.volume);
                     break;
                 }
             }
