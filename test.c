@@ -5,6 +5,10 @@
 #include "drumimage.h"
 #include "minimath.h"
 
+
+#include "uart.h"
+#include "keyboard.h"
+
 /* Note that to use the console, one should only have to
  * call console_init. To use the graphics library, one
  * should only have to call gl_init. If your main() requires
@@ -43,14 +47,30 @@ void test_math() {
     }
 }
 
+void test_keyboard_read_scancode() {
+    while(1) {
+        int scancode = keyboard_read_scancode();
+        printf("%02x\n", scancode);
+    }
+}
+
 void main() {
+    uart_init();
+    printf_init();
     delay(3);
 
+    // Graphics testing
     // printf("Beginning graphics testing...\n");
     // test_gl();
     // printf("Graphics testing finished.\n");
 
-    printf("Beginning math testing...\n");
-    test_math();
-    printf("Math testing finished.\n");
+    // Math library testing
+    // printf("Beginning math testing...\n");
+    // test_math();
+    // printf("Math testing finished.\n");
+
+    // Test reading bits into GPIO
+    keyboard_init();
+    printf("Waiting for bits...")
+    test_keyboard_read_scancode();
 }
