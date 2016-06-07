@@ -9,9 +9,13 @@
  */
 
 typedef volatile struct hit {
-	int drum;
-    int volume;
-    int time_elapsed;
+	int D0;
+    int D1;
+    int D2;
+    int D3;
+    int D4;
+    int D5;
+    int D6;
 } hit_t;
  
 typedef volatile struct cir cir_t;

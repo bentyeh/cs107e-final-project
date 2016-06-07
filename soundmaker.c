@@ -33,7 +33,8 @@ static int stored_time;
 static int first_beat_time;
 int value = 0;
 
-static hit_t hit1;
+static hit_t *hit1;
+
 
 static int num_keys;
 static int *sensor_values;
@@ -56,6 +57,8 @@ int d6 = 0;
  */
 void soundmaker_init(int keys) {
 
+	
+
     // Set up GPIO pins for buttons
     set_buttons(START);
     set_buttons(STOP);
@@ -71,6 +74,17 @@ void soundmaker_init(int keys) {
     num_keys = keys;
     int temp[keys];
     sensor_values = malloc(sizeof(temp));
+//     hit_t temp_h;
+//     temp_h.D0 = 0;
+//      temp_h.D1 = 0;
+//       temp_h.D2 = 0;
+//        temp_h.D3 = 0;
+//         temp_h.D4 = 0;
+// 		 temp_h.D5 = 0;
+// 		  temp_h.D5 = 0;
+    
+    
+//    hit1 = malloc(sizeof(temp_h));
 
     // Sample the ambient environment for calibration
     ambient_vibration = sensors_get_ambient_vibration(3000);
@@ -87,9 +101,9 @@ void soundmaker_init(int keys) {
 */
 
 void soundmaker_record_beat(hit_t hit1){
-    // Add time_elapsed to the hit1 structure
-    hit1.time_elapsed = get_time_elapsed();
-    cir_enqueue(cir_record, hit1);
+//     Add time_elapsed to the hit1 structure
+//     hit1.time_elapsed = get_time_elapsed();
+//     cir_enqueue(cir_record, hit1);
 }
 
 /*
@@ -97,12 +111,12 @@ void soundmaker_record_beat(hit_t hit1){
 */
 
 volatile hit_t soundmaker_replay_beat(){
-    if(cir_empty(cir_record)){
-        // return 0;
-    }
-    hit_t hit2 = cir_dequeue(cir_record);
-    cir_enqueue(cir_record, hit2);
-    return hit2;
+//     if(cir_empty(cir_record)){
+//         // return 0;
+//     }
+//     hit_t hit2 = cir_dequeue(cir_record);
+//     cir_enqueue(cir_record, hit2);
+//     return hit2;
 }
 
 
@@ -111,31 +125,31 @@ volatile hit_t soundmaker_replay_beat(){
 * global and subtracting off the difference.
 */
 int get_time_elapsed(){
-    int new_time = timer_get_time();
-    if(stored_time == 0){
-        first_beat_time = new_time;
-        return 0;
-    }
-    int elapsed_time = (new_time - stored_time);
-    stored_time = new_time;
-    return elapsed_time;
+//     int new_time = timer_get_time();
+//     if(stored_time == 0){
+//         first_beat_time = new_time;
+//         return 0;
+//     }
+//     int elapsed_time = (new_time - stored_time);
+//     stored_time = new_time;
+//     return elapsed_time;
 }
 
 
 //getter functions for main
-int soundmaker_get_drum(hit_t hit1){
-    return hit1.drum;
-}
-
-//getter functions for main
-int soundmaker_get_volume(hit_t hit1){
-    return hit1.volume;
-}
-
-//getter functions for main
-int soundmaker_get_delay(hit_t hit1){
-    return hit1.time_elapsed;
-}
+// int soundmaker_get_drum(hit_t hit1){
+//     return hit1.drum;
+// }
+// 
+// //getter functions for main
+// int soundmaker_get_volume(hit_t hit1){
+//     return hit1.volume;
+// }
+// 
+// //getter functions for main
+// int soundmaker_get_delay(hit_t hit1){
+//     return hit1.time_elapsed;
+// }
 
     
 /*This is a timer interrupt that fires to see if the drums were hit because
@@ -146,8 +160,8 @@ Need to remember how mush it was the last time the interrupt checked */
 
 void soundmaker_vector(unsigned pc){
 	//printf("val %d \n", value);
-	//printf("hit sum %d\n", hit1.volume);
-    gpio_check_and_clear_event(GPIO_INTERRUPT_PIN);
+	//printf("hit vol %d\n", (*hit1).volume);
+	//printf("hit drum %d\n", (*hit1).drum);
 
 
 
@@ -156,9 +170,33 @@ void soundmaker_vector(unsigned pc){
     //The idea of this if condition is to evaluate if there was a hit, and not just bouncing
     // if((d0 > 800 && (d0 - d0_prev) > 10) || (d1 > 800 && (d1 - d1_prev) > 10) || 
     //     (d2 > 800 && (d2 - d2_prev) > 10) || (d3 > 800 && (d3 - d3_prev) > 10)){
+//     (*hit1).D0 = d0;
+//     (*hit1).D1 = d1;
+//     (*hit1).D2 = d2;
+//     (*hit1).D3 = d3;
+//     (*hit1).D4 = d4;
+//     (*hit1).D5 = d5;
+//     (*hit1).D6 = d6;
 
-   cir_enqueue(cir_freeplay, hit1);
+	hit_t hit10;
+	hit10.D0 = d0;
+	hit10.D1 = d1;
+	hit10.D2 = d2;
+	hit10.D3 = d3;
+	hit10.D4 = d4;
+	hit10.D5 = d5;
+	hit10.D6 = d6;
+
     
+// 	if((*hit1).volume > 0){
+// 		if((*hit1).volume == 1){
+// 			(*hit1).volume = 800;
+// 		}
+   	cir_enqueue(cir_freeplay, hit10);
+
+//    }
+    
+    gpio_check_and_clear_event(GPIO_INTERRUPT_PIN);
 	//gpio_check_and_clear_event(GPIO_INTERRUPT_PIN);
 	
 
@@ -196,22 +234,22 @@ void soundmaker_vector2(unsigned pc){
 	armtimer_clear_interrupt();
 	
 	//set initial values to zero because there might not have been any drum hit
-	int sum = 0, drum = 0, num_drums = 0;
+//	int sum = 0, drum = 0, num_drums = 0;
 	
 	//check how hard each drum was hit
-	// int d0 = sensors_read_value(0);
+ 	d0 = sensors_read_value(0);
+ 
+	d1 = sensors_read_value(1);
 
-	// int d1 = sensors_read_value(1);
+	d2 = sensors_read_value(2);
 
-	// int d2 = sensors_read_value(2);
+	d3 = sensors_read_value(3);
 
-	// int d3 = sensors_read_value(3);
+	d4 = sensors_read_value(4);
 
-	// int d4 = sensors_read_value(4);
+	d5 = sensors_read_value(5);
 
-	// int d5 = sensors_read_value(5);
-
-	// int d6 = sensors_read_value(6);
+	d6 = sensors_read_value(6);
 
 	
 	
@@ -262,18 +300,18 @@ void soundmaker_vector2(unsigned pc){
 	//cir_enqueue(cir_freeplay, hit1);
 	//printf("hit sum %d\n", hit1.volume);
 	
-	for(int i = 0; i < num_keys; i++){
-		int vol = sensors_read_value(i);
-		if(vol > SENSOR_THRESHOLD){
-			hit1.drum = i;
-			hit1.volume = vol;
-			hit1.time_elapsed = 0;
-			//return;
-		}
-	
-	
-	}
-	
+	// for(int i = 0; i < num_keys; i++){
+// 		int vol = sensors_read_value(i);
+// 		if(vol > SENSOR_THRESHOLD){
+// 			(*hit1).drum = i;
+// 			(*hit1).volume = vol;
+// 			(*hit1).time_elapsed = 0;
+// 			//return;
+// 		}
+// 	
+// 	
+// 	}
+// 	
 	
 }
 

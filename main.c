@@ -18,7 +18,7 @@
 #define STOP GPIO_PIN21
 #define PLAY GPIO_PIN22
 #define CLEAR GPIO_PIN23
-#define GPROF_TIMER_INTERVAL 0x10
+#define GPROF_TIMER_INTERVAL 0x100
 #define DURATION 100000
 #define WIDTH 800
 #define HEIGHT 600
@@ -69,15 +69,36 @@ void main(void) {
             freq2 = 0;
             // play sound
             hit_t hit5 = cir_dequeue(cir_freeplay);
-            for(int i = 0; i < NUM_KEYS; i++) {
-            	if(hit5.drum == i){
-            		beat_drum(i, DURATION);
-            		freq1 = KEY_FREQ[i];
-            		audio_send_mix_wave(freq1, 0, hit5.volume);
-            		break;
-            	}
-            
-            }
+//             for(int i = 0; i < NUM_KEYS; i++) {
+//             	if(hit5.drum == i){
+//             		beat_drum(i, DURATION);
+//             		freq1 = KEY_FREQ[i];
+//             		audio_send_mix_wave(freq1, 0, hit5.volume);
+//             		break;
+//             	}
+//             
+//             }
+			
+			beat_drum(0, DURATION);
+			beat_drum(1, DURATION);
+			beat_drum(2, DURATION);
+			beat_drum(3, DURATION);
+			beat_drum(4, DURATION);
+			beat_drum(5, DURATION);
+			beat_drum(6, DURATION);
+			
+			audio_send_mix_wave(KEY_FREQ[0], 0, hit5.D0);
+			audio_send_mix_wave(KEY_FREQ[1], 0, hit5.D1);
+			audio_send_mix_wave(KEY_FREQ[2], 0, hit5.D2);
+			audio_send_mix_wave(KEY_FREQ[3], 0, hit5.D3);
+			audio_send_mix_wave(KEY_FREQ[4], 0, hit5.D4);
+			audio_send_mix_wave(KEY_FREQ[5], 0, hit5.D5);
+			audio_send_mix_wave(KEY_FREQ[6], 0, hit5.D6);
+
+			
+			
+			
+			
             // for(int i = 0; i < NUM_KEYS; i++) {
 //                 if(hit5.drum & (1<<i)) {
 //                     if(!freq1) {
@@ -112,11 +133,11 @@ dequeue is.
 it dequeues a value, then it plays the sets the beat to be played after its delay
 is completed, then it will requeue the beat when it is done */
 void main_cycle_sound(){
-	hit_t play_out = cir_dequeue(cir_record);
-	cir_enqueue(cir_record, play_out);
-	int delay_time = play_out.time_elapsed;
-	delay(delay_time);
-	audio_send_tone(WAVE_SINE, play_out.drum, play_out.volume);
+// 	hit_t play_out = cir_dequeue(cir_record);
+// 	cir_enqueue(cir_record, play_out);
+// 	int delay_time = play_out.time_elapsed;
+// 	delay(delay_time);
+// 	audio_send_tone(WAVE_SINE, play_out.drum, play_out.volume);
 }
 
 

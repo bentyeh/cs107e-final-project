@@ -27,10 +27,10 @@ void interrupt_vector(unsigned pc) {
 //   }else{
   	//its a drum!!!
   	//this is a timer interrupt
-  	if(!gpio_check_event(GPIO_PIN19)){
-  		soundmaker_vector2(pc);
-  	}else{
+  	if(gpio_check_event(GPIO_PIN19)){
   		soundmaker_vector(pc);
+  	}else{
+  		soundmaker_vector2(pc);
   	}
 //  }                                                                                                                  
                                                                                                                 
