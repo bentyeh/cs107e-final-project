@@ -245,7 +245,7 @@ void audio_send_tone(wave_type_t type, unsigned int hz, int volume) {
     int i = 0;
     
     int tone_start = timer_get_time();
-    while((timer_get_time() - tone_start) < (100000 / 4)) {
+    while((timer_get_time() - tone_start) < (100000)) {
       int status =  *(pwm + BCM2835_PWM_STATUS);
       
       if (!(status & BCM2835_FULL1)) {
@@ -346,7 +346,7 @@ static void audio_send_wave(unsigned wave, unsigned int hz, int volume) {
     int i = 0;
     
     int tone_start = timer_get_time();
-    while((timer_get_time - tone_start) < (100000 / 4)) {
+    while((timer_get_time - tone_start) < (100000)) {
       int status =  *(pwm + BCM2835_PWM_STATUS);
       
       if (!(status & BCM2835_FULL1)) {
