@@ -77,137 +77,6 @@ volatile unsigned* pwm  = (void*)PWM_BASE;
 unsigned waveform_square[64];
 unsigned waveform_triangle[64];
 unsigned waveform_saw[64];
-unsigned waveform_sine[];
-
-/* This PWM module scales the 19.2MHz clock down to 8.192MHz.
-   It respresents a signal as 8192 PWM pulses: 64 samples of
-   128 pulses. So magnitude of a sample is the number of pulses
-   (in the range of 0-128). */
-
-/* There are four waves: square, triangle, saw, and sine. The first
-   three are generated when the program starts, the last one is a
-   lookup table compiled into the program. */
-
-
-unsigned int audio_set_clock(unsigned int frequency) {
-  frequency /= 2;
-  frequency *= 8192;
-
-  // You specify the PWM clock as a fraction of the 19.2MHz base clock.
-  // The fraction is specified in two parts: the integer component
-  // and a fractional component out of 1024. So, for example,
-  // an 8192kHz (representing a 1kHz audio tone) clock is 2.34275;
-  // this is stored as an integer part of
-  // 2 and a fractional part of 352 (0.342 * 1024).
-  unsigned int integer_part = 19200000 / frequency;
-  unsigned int fractional_part = 19200000 % frequency;
-  fractional_part *= 1024;
-  fractional_part /= frequency;
-
-
-  // Fractional part should always be less than 1024 (it's a fraction < 1
-  // times 1024, but check to be sure).
-  if (integer_part < (1 << 12) &&
-      integer_part > 0 &&
-      fractional_part < 1024) {
-    // Stop the clock
-    *(clk + BCM2835_PWMCLK_CNTL) = PM_PASSWORD | (1 << 5);
-    // Reset clock
-    *(clk + BCM2835_PWMCLK_DIV)  = PM_PASSWORD | (integer_part << 12) | fractional_part;
-    return 1;
-  } else {
-    return 0;
-  }
-}
-
-/* This function does not return. It transmits a over
-   the RPi audio jack as a pulse-width-modulated signal. It sends a
-   wave as 64 values of up to 128 pulses each (so the x-axis
-   of the wave is quantized to 64 values and the Y axis is
-   quantized to 128 values).
-
-**For the RPi bongos, the waveform or wave type should always be sine
-
-This is a generic send tone function that allows the caller to indicate
-the wave shape, frequency, and volume (through modifying the waveform amplitude)
-The note duration parameter is currently in ticks of the armtimer
-*/
-
-
-void audio_send_tone(wave_type_t type, unsigned int hz, int volume, int note_duration) {
-  unsigned* waveform;
-  if (type == WAVE_TRIANGLE) {
-    waveform = waveform_triangle;
-  } else if (type == WAVE_SINE) {
-    waveform = waveform_sine;
-  } else if (type == WAVE_SAW) {
-    waveform = waveform_saw;
-  } else {
-    waveform = waveform_square;
-  }
-  
-  if (audio_set_clock(hz)) {
-    // Start the clock
-    // enable (ENAB) + oscillator 
-    // raspbian has this as plla
-    *(clk + BCM2835_PWMCLK_CNTL) = PM_PASSWORD |
-      BCM2835_CM_ENAB |
-      BCM2835_CM_OSCILLATOR;
-    
-    delay_us(2000);
-    
-    // disable PWM
-    *(pwm + BCM2835_PWM_CONTROL) = 0;
-    
-    delay_us(2000);
-    
-    // We are dividing each "step" of the sinusoid into 128
-    // pulse slots.
-    *(pwm+BCM2835_PWM0_RANGE) = 0x80;
-    *(pwm+BCM2835_PWM1_RANGE) = 0x80;
-
-    // Re-enable PWM
-    *(pwm+BCM2835_PWM_CONTROL) =
-      BCM2835_PWM1_USEFIFO | 
-      BCM2835_PWM1_ENABLE | 
-      BCM2835_PWM0_USEFIFO | 
-      BCM2835_PWM0_ENABLE |
-      1 << 6; // Clear the FIFO of any old data
-    
-    delay_us(2000);
-
-    int i = 0;
-    
-    int audio_tick = 0;
-    while(audio_tick < note_duration) {
-      int status =  *(pwm + BCM2835_PWM_STATUS);
-      
-      if (!(status & BCM2835_FULL1)) {
-        *(pwm+BCM2835_PWM_FIFO) = ((waveform[i] * volume) / MAX_VOL_VAL);
-        i++;
-        i = i % 64;
-      }
-      if ((status & ERRORMASK)) {
-        *(pwm+BCM2835_PWM_STATUS) = ERRORMASK;
-      }
-      audio_tick++; 
-    }
-  }
-}
-
-
-void audio_init() {
-  int i;
-  SET_GPIO_ALT(40, 0);
-  SET_GPIO_ALT(45, 0);
-  delay_us(2000);
-  for (i = 0; i < 64; i++) {
-    waveform_square[i] = (i < 32)? 0: 64;
-    waveform_triangle[i] = (i < 32)? (2 * i) : 64 - (2 * (i - 32));
-    waveform_saw[i] = i;
-  }
-}
-
 // This is a sinusoid represented as 64 values in the range of [-32, 32]
 unsigned waveform_sine[] = {32,
                        35,
@@ -276,47 +145,255 @@ unsigned waveform_sine[] = {32,
                        32
 };
 
+/* This PWM module scales the 19.2MHz clock down to 8.192MHz.
+   It respresents a signal as 8192 PWM pulses: 64 samples of
+   128 pulses. So magnitude of a sample is the number of pulses
+   (in the range of 0-128). */
+
+/* There are four waves: square, triangle, saw, and sine. The first
+   three are generated when the program starts, the last one is a
+   lookup table compiled into the program. */
+
+
+unsigned int audio_set_clock(unsigned int frequency) {
+  frequency /= 2;
+  frequency *= 8192;
+
+  // You specify the PWM clock as a fraction of the 19.2MHz base clock.
+  // The fraction is specified in two parts: the integer component
+  // and a fractional component out of 1024. So, for example,
+  // an 8192kHz (representing a 1kHz audio tone) clock is 2.34275;
+  // this is stored as an integer part of
+  // 2 and a fractional part of 352 (0.342 * 1024).
+  unsigned int integer_part = 19200000 / frequency;
+  unsigned int fractional_part = 19200000 % frequency;
+  fractional_part *= 1024;
+  fractional_part /= frequency;
+
+
+  // Fractional part should always be less than 1024 (it's a fraction < 1
+  // times 1024, but check to be sure).
+  if (integer_part < (1 << 12) &&
+      integer_part > 0 &&
+      fractional_part < 1024) {
+    // Stop the clock
+    *(clk + BCM2835_PWMCLK_CNTL) = PM_PASSWORD | (1 << 5);
+    // Reset clock
+    *(clk + BCM2835_PWMCLK_DIV)  = PM_PASSWORD | (integer_part << 12) | fractional_part;
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+/* This function does not return. It transmits a over
+   the RPi audio jack as a pulse-width-modulated signal. It sends a
+   wave as 64 values of up to 128 pulses each (so the x-axis
+   of the wave is quantized to 64 values and the Y axis is
+   quantized to 128 values).
+
+**For the RPi bongos, the waveform or wave type should always be sine
+
+This is a generic send tone function that allows the caller to indicate
+the wave shape, frequency, and volume (through modifying the waveform amplitude)
+The tone is played for the length of a quarter note
+*/
+
+
+void audio_send_tone(wave_type_t type, unsigned int hz, int volume) {
+  unsigned* waveform;
+  if (type == WAVE_TRIANGLE) {
+    waveform = waveform_triangle;
+  } else if (type == WAVE_SINE) {
+    waveform = waveform_sine;
+  } else if (type == WAVE_SAW) {
+    waveform = waveform_saw;
+  } else {
+    waveform = waveform_square;
+  }
+  
+  if (audio_set_clock(hz)) {
+    // Start the clock
+    // enable (ENAB) + oscillator 
+    // raspbian has this as plla
+    *(clk + BCM2835_PWMCLK_CNTL) = PM_PASSWORD |
+      BCM2835_CM_ENAB |
+      BCM2835_CM_OSCILLATOR;
+    
+    delay_us(2000);
+    
+    // disable PWM
+    *(pwm + BCM2835_PWM_CONTROL) = 0;
+    
+    delay_us(2000);
+    
+    // We are dividing each "step" of the sinusoid into 128
+    // pulse slots.
+    *(pwm+BCM2835_PWM0_RANGE) = 0x80;
+    *(pwm+BCM2835_PWM1_RANGE) = 0x80;
+
+    // Re-enable PWM
+    *(pwm+BCM2835_PWM_CONTROL) =
+      BCM2835_PWM1_USEFIFO | 
+      BCM2835_PWM1_ENABLE | 
+      BCM2835_PWM0_USEFIFO | 
+      BCM2835_PWM0_ENABLE |
+      1 << 6; // Clear the FIFO of any old data
+    
+    delay_us(2000);
+
+    int i = 0;
+    
+    int tone_start = timer_get_time();
+    while((timer_get_time() - tone_start) < (100000 / 4)) {
+      int status =  *(pwm + BCM2835_PWM_STATUS);
+      
+      if (!(status & BCM2835_FULL1)) {
+        *(pwm+BCM2835_PWM_FIFO) = ((waveform[i] * volume) / MAX_VOL_VAL);
+        i++;
+        i = i % 64;
+      }
+      if ((status & ERRORMASK)) {
+        *(pwm+BCM2835_PWM_STATUS) = ERRORMASK;
+      } 
+    }
+  }
+}
+
+
+void audio_init() {
+  int i;
+  SET_GPIO_ALT(40, 0);
+  SET_GPIO_ALT(45, 0);
+  delay_us(2000);
+  for (i = 0; i < 64; i++) {
+    waveform_square[i] = (i < 32)? 0: 64;
+    waveform_triangle[i] = (i < 32)? (2 * i) : 64 - (2 * (i - 32));
+    waveform_saw[i] = i;
+  }
+}
+
 //test tone function
 void audio_send_1kHz() {
-  audio_send_tone(WAVE_SINE, 1000, 1024, 1000);
+  audio_send_tone(WAVE_SINE, 1000, 1024);
 }
 
 /* Sends the audio tone for a tom drum */
-void audio_send_tom(int vol){
-	audio_send_tone(WAVE_SINE, TOM_FREQ, vol, 1000);
-}
+// void audio_send_tom(int vol){
+// 	audio_send_tone(WAVE_SINE, TOM_FREQ, vol, 1000);
+// }
 
 /* Sends the audio tone for a cymbal */
-void audio_send_cymbal(int vol){
-	audio_send_tone(WAVE_SINE, CYMBAL_FREQ, vol, 1000);
-}
+// void audio_send_cymbal(int vol){
+// 	audio_send_tone(WAVE_SINE, CYMBAL_FREQ, vol, 1000);
+// }
 
 /* Sends the audio tone for a kick drum */
-void audio_send_kick(int vol){
-	audio_send_tone(WAVE_SINE, KICK_FREQ, vol, 1000);
-}
+// void audio_send_kick(int vol){
+// 	audio_send_tone(WAVE_SINE, KICK_FREQ, vol, 1000);
+// }
 
 /*Sends the audio tone for a bongo drum */
-void audio_send_bongo(int vol){
-	audio_send_tone(WAVE_SINE, BONGO_FREQ, vol, 1000);
-}
+// void audio_send_bongo(int vol){
+// 	audio_send_tone(WAVE_SINE, BONGO_FREQ, vol, 1000);
+// }
 
 /* Sends the audio tone for a conga drum */
-void audio_send_conga(int vol){
-	audio_send_tone(WAVE_SINE, CONGA_FREQ, vol, 1000);
-}
+// void audio_send_conga(int vol){
+// 	audio_send_tone(WAVE_SINE, CONGA_FREQ, vol, 1000);
+// }
 
 /* Sends the audio tone for a high-hat */
-void audio_send_high_hat(int vol){
-	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ, vol, 1000);
+// void audio_send_high_hat(int vol){
+// 	audio_send_tone(WAVE_SINE, HIGH_HAT_FREQ, vol, 1000);
+// }
+
+/* Helper for sending mixed audio waves */
+static void audio_send_wave(unsigned wave, unsigned int hz, int volume) {
+  unsigned* waveform; //will cause 'uninitialized warning -> ignore'
+   waveform = wave;
+  
+  if (audio_set_clock(hz)) {
+    // Start the clock
+    // enable (ENAB) + oscillator 
+    // raspbian has this as plla
+    *(clk + BCM2835_PWMCLK_CNTL) = PM_PASSWORD |
+      BCM2835_CM_ENAB |
+      BCM2835_CM_OSCILLATOR;
+    
+    delay_us(2000);
+    
+    // disable PWM
+    *(pwm + BCM2835_PWM_CONTROL) = 0;
+    
+    delay_us(2000);
+    
+    // We are dividing each "step" of the sinusoid into 128
+    // pulse slots.
+    *(pwm+BCM2835_PWM0_RANGE) = 0x80;
+    *(pwm+BCM2835_PWM1_RANGE) = 0x80;
+
+    // Re-enable PWM
+    *(pwm+BCM2835_PWM_CONTROL) =
+      BCM2835_PWM1_USEFIFO | 
+      BCM2835_PWM1_ENABLE | 
+      BCM2835_PWM0_USEFIFO | 
+      BCM2835_PWM0_ENABLE |
+      1 << 6; // Clear the FIFO of any old data
+    
+    delay_us(2000);
+
+    int i = 0;
+    
+    int tone_start = timer_get_time();
+    while((timer_get_time - tone_start) < (100000 / 4)) {
+      int status =  *(pwm + BCM2835_PWM_STATUS);
+      
+      if (!(status & BCM2835_FULL1)) {
+        *(pwm+BCM2835_PWM_FIFO) = ((waveform[i] * volume) / MAX_VOL_VAL);
+        i++;
+        i = i % 64;
+      }
+      if ((status & ERRORMASK)) {
+        *(pwm+BCM2835_PWM_STATUS) = ERRORMASK;
+      }
+    }
+  }
 }
 
-int audio_send_mix_wave(int freq1, int freq2){
-  //TODO
-  // 2Acos((f1 - f2)/2)tcos((f1 + f2)/2)t
-  if(freq2 == 0){
-    
+
+// Mixes two waves of different frequencies and sends the output to the audio jack
+// The second frequency may be zero but not the first
+int audio_send_mix_wave(int freq1, int freq2, int volume){
+  //Pseudocode:
+    //find greatest common denominator, set as wave frequency
+    //calculate the sine waveform based on the hz for each frequency
+    //add the wafeforms at each point (assuming in sync)
+    //shift all points of the final waveform up by its lowest value
+    //return 1 if successful, 0 otherwise
+
+  if(freq1 == 0) return 0; //return error if the first frequency is 0
+  //special case for if the second frequency is 0
+  if(freq2== 0){
+    audio_send_tone(WAVE_SINE, freq1, volume);
+    return 1;
   }
-  
-  return 0;
+
+  int wave_final[64];
+  int freq = gcd(freq1, freq2);
+  int adjuster = 64 / (2 * MATH_PI * 64);
+
+  for(int i = 0; i < 64; i++){
+    wave_final[i] = sin(freq1 * 2 * MATH_PI * adjuster) + sin(freq2 * 2 * MATH_PI * adjuster);
+    wave_final[i] = wave_final[i] * waveform_sine[i]; //multiply by the base sine wave provided by Phil
+    adjuster += adjuster;
+  }
+  //shift all values up so there are no negative values
+  int min = min_arr(wave_final, 64);
+  for(int i = 0; i < 64; i++){
+    wave_final[i] += min;
+  }
+
+  audio_send_wave( (unsigned) wave_final, freq, volume);
+  return 1;
 }

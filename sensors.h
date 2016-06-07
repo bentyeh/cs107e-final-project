@@ -10,5 +10,6 @@
 
 void sensors_init(void);
 int sensors_read_value(unsigned int channel);
+int sensors_get_ambient_vibration(int time);
 
 #endif

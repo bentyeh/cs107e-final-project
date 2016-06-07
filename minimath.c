@@ -137,3 +137,22 @@ double sin(double x) {
 double cos(double x){
     return sin(MATH_PI/2 - x);
 }
+
+// Finds the greatest common denominator using Euclid's algorithm iteratively
+int gcd(int a, int b){
+    while (b != 0){
+        int t = b;
+        b = a % b;
+        a = t;
+    } 
+    return a;
+}
+
+//finds the minimum value in an array
+int min_arr(int array[], int length){
+    int min = 0;
+    for(int i = 0; i < length; i ++){
+        min = min_i(min, array[i]);
+    }
+    return min;
+}
