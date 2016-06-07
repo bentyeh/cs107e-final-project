@@ -51,7 +51,7 @@ static void main_init(){
     audio_init();
     sensors_init();
     gpio_init();
-    soundmaker_init();
+    soundmaker_init(NUM_KEYS);
     drumimage_init(WIDTH, HEIGHT, NUM_KEYS);
     armtimer_init();
     armtimer_start(GPROF_TIMER_INTERVAL);

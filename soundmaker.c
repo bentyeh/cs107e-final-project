@@ -153,7 +153,7 @@ void soundmaker_vector(unsigned pc){
         sensor_values[i] = sensors_read_value(i);
 
         if(sensor_values[i] > SENSOR_THRESHOLD) {
-            sensor_mask |= (1<<i)
+            sensor_mask |= (1<<i);
             avg_volume += sensor_values[i];
             count++;
         }
@@ -174,7 +174,7 @@ void soundmaker_vector(unsigned pc){
     //generate a hit from the drums
     hit_t hit1;
     hit1.drum = sensor_mask;
-    hit1.volume = avg_vol;
+    hit1.volume = avg_volume;
     hit1.time_elapsed = 0;
     
     //enqueue the hit into the freeplay circular buffer
@@ -205,19 +205,3 @@ void soundmaker_clear_cir() {
     cir_clear(cir_record);
 }
 
-//Please do not remove, they are used to get the previous value of the channel
-int get_d0_prev(){
-    return d0_prev;
-}
-
-int get_d1_prev(){
-    return d1_prev;
-}
-
-int get_d2_prev(){
-    return d2_prev;
-}
-
-int get_d3_prev(){
-    return d3_prev;
-}
