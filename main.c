@@ -74,6 +74,7 @@ void main(void) {
             		beat_drum(i, DURATION);
             		freq1 = KEY_FREQ[i];
             		audio_send_mix_wave(freq1, 0, hit5.volume);
+            		break;
             	}
             
             }

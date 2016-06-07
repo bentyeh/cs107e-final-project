@@ -145,8 +145,8 @@ we cannot get interrupts directly from SPI*/
 Need to remember how mush it was the last time the interrupt checked */
 
 void soundmaker_vector(unsigned pc){
-	printf("val %d \n", value);
-	printf("hit sum %d\n", hit1.volume);
+	//printf("val %d \n", value);
+	//printf("hit sum %d\n", hit1.volume);
     gpio_check_and_clear_event(GPIO_INTERRUPT_PIN);
 
 
@@ -267,7 +267,7 @@ void soundmaker_vector2(unsigned pc){
 			hit1.drum = i;
 			hit1.volume = sensors_read_value(i);
 			hit1.time_elapsed = 0;
-			return;
+			//return;
 		}
 	
 	
