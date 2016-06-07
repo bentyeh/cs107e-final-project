@@ -260,7 +260,7 @@ void soundmaker_vector2(unsigned pc){
 	hit1.volume = comb_vol;
 	hit1.time_elapsed = 0;
 	
-	cir_enqueue(cir_freeplay, hit1);
+	//cir_enqueue(cir_freeplay, hit1);
 	printf("hit sum %d\n", hit1.volume);
 }
 
