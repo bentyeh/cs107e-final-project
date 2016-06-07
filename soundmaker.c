@@ -157,7 +157,26 @@ void soundmaker_vector(unsigned pc){
 	int d3 = sensors_read_value(3);
 	// printf("A2C 3 value: %d\n", d3);
 	d3 -= ambient_vibration;
+<<<<<<< HEAD
 	// printf("A2C 3 adjusted: %d\n", d3);
+=======
+	printf("A2C 3 adjusted: %d\n", d3);
+	
+	int d4 = sensors_read_value(0);
+	printf("A2C 0 value: %d\n", d4);
+	d4 -= ambient_vibration;
+	printf("A2C 0 adjusted: %d\n", d4);		
+
+	int d5 = sensors_read_value(1);
+	printf("A2C 1 value: %d\n", d5);
+	d5 -= ambient_vibration;
+	printf("A2C 1 adjusted: %d\n", d5);
+
+	int d6 = sensors_read_value(2);
+	printf("A2C 2 value: %d\n", d6);
+	d6 -= ambient_vibration;
+	printf("A2C 2 adjusted: %d\n", d6);
+>>>>>>> 2ba5b3aa71a09910788557a6b54d79e4563ad52e
 
 	//add up if multiple drums were hit
 	if(d0 > 500){
@@ -177,6 +196,21 @@ void soundmaker_vector(unsigned pc){
 	}
 	if(d3 > 800){
 		sum += d3;
+		drum += 8;
+		num_drums++;
+	}
+	if(d4 > 800){
+		sum += d4;
+		drum += 8;
+		num_drums++;
+	}
+	if(d5 > 800){
+		sum += d5;
+		drum += 8;
+		num_drums++;
+	}
+	if(d6 > 800){
+		sum += d6;
 		drum += 8;
 		num_drums++;
 	}
