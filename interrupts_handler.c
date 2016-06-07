@@ -5,36 +5,18 @@
 #include "soundmaker.h"
 
 
-#define START GPIO_PIN20
-#define STOP GPIO_PIN21
-#define PLAY GPIO_PIN22
-#define CLEAR GPIO_PIN23
+#define START	GPIO_PIN20
+#define STOP	GPIO_PIN21
+#define PLAY	GPIO_PIN22
+#define CLEAR	GPIO_PIN23
+
+#define GPIO_INTERRUPT_PIN  GPIO_PIN19
 
 /* Interrupt Handlers */
 
 
 void interrupt_vector(unsigned pc) {
-//if it isn't a button, then check the drums
-
-//   if(gpio_check_event(START)){
-//   		main_vector(START);
-//   }else if(gpio_check_event(STOP)){
-//   		main_vector(STOP);
-//   }else if(gpio_check_event(PLAY)){
-//   		main_vector(PLAY);
-//   }else if(gpio_check_event(CLEAR)){
-//   		main_vector(CLEAR);
-//   }else{
-  	//its a drum!!!
-  	//this is a timer interrupt
-  	if(gpio_check_event(GPIO_PIN19)){
-  		soundmaker_vector(pc);
-  	}else{
-  		soundmaker_vector2(pc);
-  	}
-//  }                                                                                                                  
-                                                                                                                
-
+  	soundmaker_vector(pc);
 }
 
 // The rest of these should never be called

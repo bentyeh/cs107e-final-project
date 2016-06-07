@@ -33,23 +33,15 @@ static int stored_time;
 static int first_beat_time;
 int value = 0;
 
-static hit_t *hit1;
+// static hit_t *hit1;
 
 
 static int num_keys;
-static int *sensor_values;
+// int *sensor_values;
 
 extern int toggle_play; //can i get this from main?
 extern int toggle_stop; //can i get this from main?
 extern int ambient_vibration = 0; //global var to get the ambient viration of the room to calibrate
-
-int d0 = 0;
-int d1 = 0;
-int d2 = 0;
-int d3 = 0;
-int d4 = 0;
-int d5 = 0;
-int d6 = 0;
 
 
 /*
@@ -57,34 +49,13 @@ int d6 = 0;
  */
 void soundmaker_init(int keys) {
 
-	
-
-    // Set up GPIO pins for buttons
-    set_buttons(START);
-    set_buttons(STOP);
-    set_buttons(PLAY);
-    set_buttons(CLEAR);
-    stored_time = 0;
-    first_beat_time = 0;
-
     // Initialize buffers for freeplay and record
     cir_record = cir_new();
     cir_freeplay = cir_new();
 
     num_keys = keys;
     int temp[keys];
-    sensor_values = malloc(sizeof(temp));
-//     hit_t temp_h;
-//     temp_h.D0 = 0;
-//      temp_h.D1 = 0;
-//       temp_h.D2 = 0;
-//        temp_h.D3 = 0;
-//         temp_h.D4 = 0;
-// 		 temp_h.D5 = 0;
-// 		  temp_h.D5 = 0;
-    
-    
-//    hit1 = malloc(sizeof(temp_h));
+    // sensor_values = malloc(sizeof(temp));
 
     // Sample the ambient environment for calibration
     ambient_vibration = sensors_get_ambient_vibration(3000);
@@ -124,7 +95,7 @@ volatile hit_t soundmaker_replay_beat(){
 * Records the time elapsed between hits by storing the old time in a stored time 
 * global and subtracting off the difference.
 */
-int get_time_elapsed(){
+int get_time_elapsed() {
 //     int new_time = timer_get_time();
 //     if(stored_time == 0){
 //         first_beat_time = new_time;
@@ -135,197 +106,14 @@ int get_time_elapsed(){
 //     return elapsed_time;
 }
 
-
-//getter functions for main
-// int soundmaker_get_drum(hit_t hit1){
-//     return hit1.drum;
-// }
-// 
-// //getter functions for main
-// int soundmaker_get_volume(hit_t hit1){
-//     return hit1.volume;
-// }
-// 
-// //getter functions for main
-// int soundmaker_get_delay(hit_t hit1){
-//     return hit1.time_elapsed;
-// }
-
-    
-/*This is a timer interrupt that fires to see if the drums were hit because
-we cannot get interrupts directly from SPI*/
-
-/* just play the note when we see an increase greater than 100 
-Need to remember how mush it was the last time the interrupt checked */
-
-void soundmaker_vector(unsigned pc){
-	//printf("val %d \n", value);
-	//printf("hit vol %d\n", (*hit1).volume);
-	//printf("hit drum %d\n", (*hit1).drum);
-
-
-
-    //check how hard each drum was hit
-
-    //The idea of this if condition is to evaluate if there was a hit, and not just bouncing
-    // if((d0 > 800 && (d0 - d0_prev) > 10) || (d1 > 800 && (d1 - d1_prev) > 10) || 
-    //     (d2 > 800 && (d2 - d2_prev) > 10) || (d3 > 800 && (d3 - d3_prev) > 10)){
-//     (*hit1).D0 = d0;
-//     (*hit1).D1 = d1;
-//     (*hit1).D2 = d2;
-//     (*hit1).D3 = d3;
-//     (*hit1).D4 = d4;
-//     (*hit1).D5 = d5;
-//     (*hit1).D6 = d6;
-
-	hit_t hit10;
-	hit10.D0 = d0;
-	hit10.D1 = d1;
-	hit10.D2 = d2;
-	hit10.D3 = d3;
-	hit10.D4 = d4;
-	hit10.D5 = d5;
-	hit10.D6 = d6;
-
-    
-// 	if((*hit1).volume > 0){
-// 		if((*hit1).volume == 1){
-// 			(*hit1).volume = 800;
-// 		}
-   	cir_enqueue(cir_freeplay, hit10);
-
-//    }
-    
-    gpio_check_and_clear_event(GPIO_INTERRUPT_PIN);
-	//gpio_check_and_clear_event(GPIO_INTERRUPT_PIN);
-	
-
-}
-
-void soundmaker_vector2(unsigned pc){
-	// int tmp;
-//     armtimer_clear_interrupt();
-// 	//printf("vector 2");
-// 	int sum = 0, drum = 0, num_drums = 0;
-// 
-//     int sensor_mask = 0;
-//     int count = 0;
-//     int avg_volume = 0;
-//     for(int i = 0; i < num_keys; i++) {
-//         tmp = sensors_read_value(i);
-// 		
-//         if(tmp > 0) {
-//         	printf("sensor: %d\n", tmp);
-//             sensor_mask |= (1<<i);
-//             avg_volume += sensor_values[i];
-//             count++;
-//         }
-// 	}
-// 	
-//     // Average volume of sensors whose value is above threshold
-//    	avg_volume /= count;
-//     
-//     //generate a hit from the drums
-//     hit1.drum = sensor_mask;
-//     hit1.volume = avg_volume;
-//     hit1.time_elapsed = 0;
-
+void soundmaker_vector(unsigned pc) {
 	//clear the interrupt
 	armtimer_clear_interrupt();
-	
-	//set initial values to zero because there might not have been any drum hit
-//	int sum = 0, drum = 0, num_drums = 0;
-	
-	//check how hard each drum was hit
- 	d0 = sensors_read_value(0);
- 
-	d1 = sensors_read_value(1);
 
-	d2 = sensors_read_value(2);
+	hit_t hit1;
 
-	d3 = sensors_read_value(3);
-
-	d4 = sensors_read_value(4);
-
-	d5 = sensors_read_value(5);
-
-	d6 = sensors_read_value(6);
-
-	
-	
-	//add up if multiple drums were hit
-	// if(d0 > 0){
-// 		sum += d0;
-// 		drum += 1;
-// 		num_drums++;
-// 	}
-// 	if(d1 > 0){
-// 		sum += d1;
-// 		drum += 2;
-// 		num_drums++;
-// 	}
-// 	if(d2 > 0){
-// 		sum += d2;
-// 		drum += 4;
-// 		num_drums++;
-// 	}
-// 	if(d3 > 0){
-// 		sum += d3;
-// 		drum += 8;
-// 		num_drums++;
-// 	}
-// 	if(d4 > 0){
-// 		sum += d4;
-// 		drum += 16;
-// 		num_drums++;
-// 	}
-// 	if(d5 > 0){
-// 		sum += d5;
-// 		drum += 32;
-// 		num_drums++;
-// 	}
-// 	if(d6 > 0){
-// 		sum += d6;
-// 		drum += 64;
-// 		num_drums++;
-// 	}
-// 	
-// 
-// 	int comb_vol = (sum / num_drums);
-// 
-// 	hit1.drum = drum;
-// 	hit1.volume = comb_vol;
-// 	hit1.time_elapsed = 0;
-	
-	//cir_enqueue(cir_freeplay, hit1);
-	//printf("hit sum %d\n", hit1.volume);
-	
-	// for(int i = 0; i < num_keys; i++){
-// 		int vol = sensors_read_value(i);
-// 		if(vol > SENSOR_THRESHOLD){
-// 			(*hit1).drum = i;
-// 			(*hit1).volume = vol;
-// 			(*hit1).time_elapsed = 0;
-// 			//return;
-// 		}
-// 	
-// 	
-// 	}
-// 	
-	
+	for(int i = 0; i < num_keys; i++) {
+        hit1.value_array[i] = sensors_read_value(i);
+	}
+	cir_enqueue(cir_freeplay, hit1);
 }
-
-void set_buttons(int button){
-    gpio_set_function(button, GPIO_FUNC_INPUT); 
-    gpio_set_pullup(button); 
-    gpio_set_input(button);
-}
-
-void soundmaker_new_cir() {
-    cir_record = cir_new();
-}
-
-void soundmaker_clear_cir() {
-    cir_clear(cir_record);
-}
-

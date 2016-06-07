@@ -1,6 +1,8 @@
 #ifndef CIRCULAR_H
 #define CIRCULAR_H
 
+#define MAX_NUMBER_VALUES 10
+
 /*
  * Circular buffer data structure. Provides a queue interface.
  *
@@ -9,13 +11,7 @@
  */
 
 typedef volatile struct hit {
-	int D0;
-    int D1;
-    int D2;
-    int D3;
-    int D4;
-    int D5;
-    int D6;
+	int value_array[MAX_NUMBER_VALUES];
 } hit_t;
  
 typedef volatile struct cir cir_t;
