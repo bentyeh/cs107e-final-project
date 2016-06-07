@@ -33,6 +33,7 @@ int cir_full(cir_t *cirptr) {
 /* Adds an element to the ring buffer
    Asserts an error if the buffer is full */
 void cir_enqueue(cir_t *cirptr, hit_t x) {
+    assert(!cir_full(cirptr));
     if(!cir_full(cirptr)) {
         cirptr->buf[cirptr->tail] = x;
         cirptr->tail = (cirptr->tail + 1) % CAPACITY;
