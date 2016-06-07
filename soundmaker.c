@@ -263,9 +263,10 @@ void soundmaker_vector2(unsigned pc){
 	//printf("hit sum %d\n", hit1.volume);
 	
 	for(int i = 0; i < num_keys; i++){
-		if(sensors_read_value(i) > SENSOR_THRESHOLD){
+		int vol = sensors_read_value(i);
+		if(vol > SENSOR_THRESHOLD){
 			hit1.drum = i;
-			hit1.volume = sensors_read_value(i);
+			hit1.volume = vol;
 			hit1.time_elapsed = 0;
 			//return;
 		}
