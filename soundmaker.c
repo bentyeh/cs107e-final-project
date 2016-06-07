@@ -140,32 +140,32 @@ void soundmaker_vector(unsigned pc){
 	
 	//check how hard each drum was hit
 	int d0 = sensors_read_value(0);
-	printf("A2C 0 value: %d\n", d0);
+	// printf("A2C 0 value: %d\n", d0);
 	d0 -= ambient_vibration;
-	printf("A2C 0 adjusted: %d\n", d0);		
+	// printf("A2C 0 adjusted: %d\n", d0);		
 
 	int d1 = sensors_read_value(1);
-	printf("A2C 1 value: %d\n", d1);
+	// printf("A2C 1 value: %d\n", d1);
 	d1 -= ambient_vibration;
-	printf("A2C 1 adjusted: %d\n", d1);
+	// printf("A2C 1 adjusted: %d\n", d1);
 
 	int d2 = sensors_read_value(2);
-	printf("A2C 2 value: %d\n", d2);
+	// printf("A2C 2 value: %d\n", d2);
 	d2 -= ambient_vibration;
-	printf("A2C 2 adjusted: %d\n", d2);
+	// printf("A2C 2 adjusted: %d\n", d2);
 
 	int d3 = sensors_read_value(3);
-	printf("A2C 3 value: %d\n", d3);
+	// printf("A2C 3 value: %d\n", d3);
 	d3 -= ambient_vibration;
-	printf("A2C 3 adjusted: %d\n", d3);
+	// printf("A2C 3 adjusted: %d\n", d3);
 
 	//add up if multiple drums were hit
-	if(d0 > 800){
+	if(d0 > 500){
 		sum += d0;
 		drum += 1;
 		num_drums++;
 	}
-	if(d1 > 800){
+	if(d1 > 500){
 		sum += d1;
 		drum += 2;
 		num_drums++;
@@ -198,7 +198,7 @@ void soundmaker_vector(unsigned pc){
 	//The idea of this if condition is to evaluate if there was a hit, and not just bouncing
 	// if((d0 > 800 && (d0 - d0_prev) > 10) || (d1 > 800 && (d1 - d1_prev) > 10) || 
 	// 	(d2 > 800 && (d2 - d2_prev) > 10) || (d3 > 800 && (d3 - d3_prev) > 10)){
-	if(d0 > 800 || d1 > 800 || d2 > 800 || d3 > 800){
+	if(d0 > 500 || d1 > 500 || d2 > 800 || d3 > 800){
 		cir_enqueue(cir_freeplay, hit1);
 		cnt++;
 	}

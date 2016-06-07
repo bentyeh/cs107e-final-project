@@ -18,7 +18,7 @@
 #define STOP GPIO_PIN21
 #define PLAY GPIO_PIN22
 #define CLEAR GPIO_PIN23
-#define GPROF_TIMER_INTERVAL 0x100
+#define GPROF_TIMER_INTERVAL 0x10
 #define DURATION 3000
 #define WIDTH 800
 #define HEIGHT 600
@@ -63,7 +63,7 @@ void main(void) {
     int freq1, freq2;
     while(1){
         // Freeplay
-        if(!cir_empty(cir_freeplay)) {
+        //if(!cir_empty(cir_freeplay)) {
             // reset frequencies
             freq1 = 0;
             freq2 = 0;
@@ -85,7 +85,7 @@ void main(void) {
                     break;
                 }
             }
-        }
+        //}
         // Playback
         if(toggle_play) {
     		// cycle through the stored buffer and figure out how to deal with delays
