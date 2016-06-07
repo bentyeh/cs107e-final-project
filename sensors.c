@@ -86,3 +86,9 @@ int sensors_get_ambient_vibration(int time){
 	}
 	return ambient_vibrations / samples;
 }
+
+/*
+Add functionality to store the previous sensor hit using the channel number inputed. 
+If the difference upward between the previous value and the current value is not
+greater than a threshold, return 0.
+*/
