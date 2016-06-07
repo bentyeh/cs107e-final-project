@@ -68,9 +68,9 @@ void main(void) {
             freq1 = 0;
             freq2 = 0;
             // play sound
-            hit_t hit1 = cir_dequeue(cir_freeplay);
+            hit_t hit5 = cir_dequeue(cir_freeplay);
             for(int i = 0; i < NUM_KEYS; i++) {
-                if(hit1.drum & (1<<i)) {
+                if(hit5.drum & (1<<i)) {
                     if(!freq1) {
                         freq1 = KEY_FREQ[i];
                     }
@@ -81,18 +81,18 @@ void main(void) {
                         break;
                     }
                     beat_drum(i, DURATION);
-                    audio_send_mix_wave(freq1, freq2, hit1.volume);
+                    audio_send_mix_wave(freq1, freq2, hit5.volume);
                     break;
                 }
             }
         //}
         // Playback
-        if(toggle_play) {
-    		// cycle through the stored buffer and figure out how to deal with delays
-            while(!toggle_stop){
-                main_cycle_sound();
-            }
-        }
+//         if(toggle_play) {
+//     		// cycle through the stored buffer and figure out how to deal with delays
+//             while(!toggle_stop){
+//                 main_cycle_sound();
+//             }
+//         }
     }
 }
 
@@ -120,6 +120,7 @@ static void setup_interrupts() {
     gpio_set_pullup(PLAY);
     gpio_detect_falling_edge(CLEAR);
     gpio_set_pullup(CLEAR);
+    
     interrupts_enable(INTERRUPTS_GPIO3);
     system_enable_interrupts();
 }

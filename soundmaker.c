@@ -19,7 +19,7 @@
 
 #define GPIO_INTERRUPT_PIN  GPIO_PIN19
 
-#define SENSOR_THRESHOLD 500
+#define SENSOR_THRESHOLD 100
 
 /* Function prototypes */
 int get_time_elapsed();
@@ -33,12 +33,23 @@ static int stored_time;
 static int first_beat_time;
 int value = 0;
 
+static hit_t hit1;
+
 static int num_keys;
 static int *sensor_values;
 
 extern int toggle_play; //can i get this from main?
 extern int toggle_stop; //can i get this from main?
 extern int ambient_vibration = 0; //global var to get the ambient viration of the room to calibrate
+
+int d0 = 0;
+int d1 = 0;
+int d2 = 0;
+int d3 = 0;
+int d4 = 0;
+int d5 = 0;
+int d6 = 0;
+
 
 /*
  * initialize the sound maker
@@ -66,6 +77,7 @@ void soundmaker_init(int keys) {
 
     // Set up GPIO pin for sensor interrupts
     gpio_set_function(GPIO_INTERRUPT_PIN, GPIO_FUNC_INPUT);
+    gpio_detect_rising_edge(GPIO_INTERRUPT_PIN);
     gpio_set_pulldown(GPIO_INTERRUPT_PIN);
 }
 
@@ -133,63 +145,124 @@ we cannot get interrupts directly from SPI*/
 Need to remember how mush it was the last time the interrupt checked */
 
 void soundmaker_vector(unsigned pc){
-    int i, sensor_mask, avg_volume, count;
+	printf("val %d \n", value);
+	printf("hit sum %d\n", hit1.volume);
+    gpio_check_and_clear_event(GPIO_INTERRUPT_PIN);
 
-    value = 0;
 
-    //clear the interrupt
-    if(!gpio_check_and_clear_event(GPIO_INTERRUPT_PIN)) {
-        return;
-    }
-    // armtimer_clear_interrupt();
-    
-    //set initial values to zero because there might not have been any drum hit
-    int sum = 0, drum = 0, num_drums = 0;
 
-    sensor_mask = 0;
-    count = 0;
-    avg_volume = 0;
-    for(i = 0; i < num_keys; i++) {
-        sensor_values[i] = sensors_read_value(i);
+    //check how hard each drum was hit
 
-        if(sensor_values[i] > SENSOR_THRESHOLD) {
-            sensor_mask |= (1<<i);
-            avg_volume += sensor_values[i];
-            count++;
-        }
-
-        // Debugging - check how hard each sensor was hit
-        printf("A2C %d value: %d\n", i, sensor_values[i]);
-        printf("A2C %d adjusted: %d\n", i, sensor_values[i] - ambient_vibration); 
-    }
-
-    // Do nothing if no sensor values exceeded threshold
-    if(!count) {
-        return;
-    }
-
-    // Average volume of sensors whose value is above threshold
-    avg_volume /= count;
-    
-    //generate a hit from the drums
-    hit_t hit1;
-    hit1.drum = sensor_mask;
-    hit1.volume = avg_volume;
-    hit1.time_elapsed = 0;
-    
-    //enqueue the hit into the freeplay circular buffer
     //The idea of this if condition is to evaluate if there was a hit, and not just bouncing
     // if((d0 > 800 && (d0 - d0_prev) > 10) || (d1 > 800 && (d1 - d1_prev) > 10) || 
     //     (d2 > 800 && (d2 - d2_prev) > 10) || (d3 > 800 && (d3 - d3_prev) > 10)){
 
-    cir_enqueue(cir_freeplay, hit1);
+   cir_enqueue(cir_freeplay, hit1);
+    
+	//gpio_check_and_clear_event(GPIO_INTERRUPT_PIN);
+	
 
-    //enqueue in the recording function
-    // if(!toggle_stop)
-    //         soundmaker_record_beat(hit1);
 }
 
+void soundmaker_vector2(unsigned pc){
+	// int tmp;
+//     armtimer_clear_interrupt();
+// 	//printf("vector 2");
+// 	int sum = 0, drum = 0, num_drums = 0;
+// 
+//     int sensor_mask = 0;
+//     int count = 0;
+//     int avg_volume = 0;
+//     for(int i = 0; i < num_keys; i++) {
+//         tmp = sensors_read_value(i);
+// 		
+//         if(tmp > 0) {
+//         	printf("sensor: %d\n", tmp);
+//             sensor_mask |= (1<<i);
+//             avg_volume += sensor_values[i];
+//             count++;
+//         }
+// 	}
+// 	
+//     // Average volume of sensors whose value is above threshold
+//    	avg_volume /= count;
+//     
+//     //generate a hit from the drums
+//     hit1.drum = sensor_mask;
+//     hit1.volume = avg_volume;
+//     hit1.time_elapsed = 0;
 
+	//clear the interrupt
+	armtimer_clear_interrupt();
+	
+	//set initial values to zero because there might not have been any drum hit
+	int sum = 0, drum = 0, num_drums = 0;
+	
+	//check how hard each drum was hit
+	int d0 = sensors_read_value(0);
+
+	int d1 = sensors_read_value(1);
+
+	int d2 = sensors_read_value(2);
+
+	int d3 = sensors_read_value(3);
+
+	int d4 = sensors_read_value(4);
+
+	int d5 = sensors_read_value(5);
+
+	int d6 = sensors_read_value(6);
+
+	value = d1;
+	
+	
+	//add up if multiple drums were hit
+	if(d0 > 0){
+		sum += d0;
+		drum += 1;
+		num_drums++;
+	}
+	if(d1 > 0){
+		sum += d1;
+		drum += 2;
+		num_drums++;
+	}
+	if(d2 > 0){
+		sum += d2;
+		drum += 4;
+		num_drums++;
+	}
+	if(d3 > 0){
+		sum += d3;
+		drum += 8;
+		num_drums++;
+	}
+	if(d4 > 0){
+		sum += d4;
+		drum += 8;
+		num_drums++;
+	}
+	if(d5 > 0){
+		sum += d5;
+		drum += 8;
+		num_drums++;
+	}
+	if(d6 > 0){
+		sum += d6;
+		drum += 8;
+		num_drums++;
+	}
+	
+
+	int comb_vol = (sum / num_drums);
+
+	hit1.drum = drum;
+	hit1.volume = comb_vol;
+	hit1.time_elapsed = 0;
+	
+	cir_enqueue(cir_freeplay, hit1);
+	printf("hit sum %d\n", hit1.volume);
+}
 
 void set_buttons(int button){
     gpio_set_function(button, GPIO_FUNC_INPUT); 

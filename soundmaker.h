@@ -21,5 +21,6 @@ void soundmaker_new_cir();
 void soundmaker_clear_cir();
 
 void soundmaker_vector(unsigned pc);
+void soundmaker_vector2(unsigned pc);
 
 #endif
