@@ -19,7 +19,7 @@
 
 #define GPIO_INTERRUPT_PIN  GPIO_PIN19
 
-#define SENSOR_THRESHOLD 100
+#define SENSOR_THRESHOLD 0
 
 /* Function prototypes */
 int get_time_elapsed();
@@ -199,19 +199,19 @@ void soundmaker_vector2(unsigned pc){
 	int sum = 0, drum = 0, num_drums = 0;
 	
 	//check how hard each drum was hit
-	int d0 = sensors_read_value(0);
+	// int d0 = sensors_read_value(0);
 
-	int d1 = sensors_read_value(1);
+	// int d1 = sensors_read_value(1);
 
-	int d2 = sensors_read_value(2);
+	// int d2 = sensors_read_value(2);
 
-	int d3 = sensors_read_value(3);
+	// int d3 = sensors_read_value(3);
 
-	int d4 = sensors_read_value(4);
+	// int d4 = sensors_read_value(4);
 
-	int d5 = sensors_read_value(5);
+	// int d5 = sensors_read_value(5);
 
-	int d6 = sensors_read_value(6);
+	// int d6 = sensors_read_value(6);
 
 	
 	
@@ -263,9 +263,9 @@ void soundmaker_vector2(unsigned pc){
 	//printf("hit sum %d\n", hit1.volume);
 	
 	for(int i = 0; i < num_keys; i++){
-		if(sensor_read_value(i) > SENSOR_THRESHOLD){
+		if(sensors_read_value(i) > SENSOR_THRESHOLD){
 			hit1.drum = i;
-			hit1.volume = sensor_read_value(i);
+			hit1.volume = sensors_read_value(i);
 			hit1.time_elapsed = 0;
 			return;
 		}
