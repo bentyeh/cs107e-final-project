@@ -12,12 +12,14 @@
 #include "malloc.h"
 
 
-#define START GPIO_PIN20
-#define STOP GPIO_PIN21
-#define PLAY GPIO_PIN22
-#define CLEAR GPIO_PIN23
+#define START   GPIO_PIN20
+#define STOP    GPIO_PIN21
+#define PLAY    GPIO_PIN22
+#define CLEAR   GPIO_PIN23
 
-#define SENSOR_THRESHOLD 800
+#define GPIO_INTERRUPT_PIN  GPIO_PIN19
+
+#define SENSOR_THRESHOLD 500
 
 /* Function prototypes */
 int get_time_elapsed();
@@ -43,7 +45,7 @@ extern int ambient_vibration = 0; //global var to get the ambient viration of th
  */
 void soundmaker_init(int keys) {
 
-    // Set up buttons for input
+    // Set up GPIO pins for buttons
     set_buttons(START);
     set_buttons(STOP);
     set_buttons(PLAY);
@@ -61,6 +63,10 @@ void soundmaker_init(int keys) {
 
     // Sample the ambient environment for calibration
     ambient_vibration = sensors_get_ambient_vibration(3000);
+
+    // Set up GPIO pin for sensor interrupts
+    gpio_set_function(GPIO_INTERRUPT_PIN, GPIO_FUNC_INPUT);
+    gpio_set_pulldown(GPIO_INTERRUPT_PIN);
 }
 
 /*
@@ -130,8 +136,12 @@ void soundmaker_vector(unsigned pc){
     int i, sensor_mask, avg_volume, count;
 
     value = 0;
+
     //clear the interrupt
-    armtimer_clear_interrupt();
+    if(!gpio_check_and_clear_event(GPIO_INTERRUPT_PIN)) {
+        return;
+    }
+    // armtimer_clear_interrupt();
     
     //set initial values to zero because there might not have been any drum hit
     int sum = 0, drum = 0, num_drums = 0;
