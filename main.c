@@ -19,7 +19,7 @@
 #define PLAY GPIO_PIN22
 #define CLEAR GPIO_PIN23
 #define GPROF_TIMER_INTERVAL 0x10
-#define DURATION 3000
+#define DURATION 100000
 #define WIDTH 800
 #define HEIGHT 600
 #define NUM_KEYS 7

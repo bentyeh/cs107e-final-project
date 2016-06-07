@@ -4,6 +4,7 @@
 #include "keyboard.h"
 #include "uart.h"
 #include "timer.h"
+#include "printf.h"
 
 const unsigned CLK  = GPIO_PIN23;
 const unsigned DATA = GPIO_PIN24;
