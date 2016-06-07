@@ -18,7 +18,7 @@
 #define DURATION 100000
 #define WIDTH 800
 #define HEIGHT 600
-#define NUM_KEYS 3
+#define NUM_KEYS 5
 
 /* drumsssss */
 // #define KEY_A TOM_FREQ
@@ -57,10 +57,7 @@ void main(void) {
 
     while(1) {
         hit_t hit1 = cir_dequeue(cir_freeplay);
-        for(int i = 0; i < NUM_KEYS; i++) {
-            printf("sensor %d: %d  ", i, hit1.value_array[i]);
-        }
-        // graph_values(NUM_KEYS, cir_dequeue(cir_freeplay));
+        graph_values(NUM_KEYS, hit1);
         // cir_clear(cir_freeplay);
     }
 }
@@ -68,6 +65,6 @@ void main(void) {
 static void setup_interrupts() {
     armtimer_init();
     armtimer_start(TIMER_INTERVAL);
-    interrupts_enable(INTERRUPTS_GPIO3);
+    // interrupts_enable(INTERRUPTS_GPIO3);
     system_enable_interrupts();
 }

@@ -113,7 +113,7 @@ void soundmaker_vector(unsigned pc) {
 	hit_t hit1;
 
 	for(int i = 0; i < num_keys; i++) {
-        hit1.value_array[i] = sensors_read_value(i);
+		hit1.value_array[i] = sensors_read_value(i);
 	}
 	cir_enqueue(cir_freeplay, hit1);
 }
