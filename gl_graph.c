@@ -4,7 +4,8 @@
 #include "minimath.h"
 #include "printf.h"
 
-#define HEIGHT_RESOLUTION   100
+#define HEIGHT_RESOLUTION 100
+#define THRESHOLD_VALUE 50
 
 static unsigned *bar_x_pos_array;
 static unsigned num_bars;
@@ -28,6 +29,7 @@ void graph_init(unsigned width, unsigned height, unsigned num_vars) {
     bar_x_pos_array = (unsigned *)malloc(num_bars * sizeof(unsigned));
     for(int i = 0; i < num_bars; i++) {
         bar_x_pos_array[i] = 2*i*bar_width;
+        printf("pos: %d\n", bar_x_pos_array[i]);
     }
 
     // Calculate height of each y-value
@@ -43,9 +45,15 @@ void graph_init(unsigned width, unsigned height, unsigned num_vars) {
 }
 
 void graph_values(int num_values, hit_t hit1) {
-    int i;
+    int i, tmp;
     for(i = 0; i < num_values; i++) {
-        gl_draw_rect(bar_x_pos_array[i], 0, bar_width, y_tick*hit1.value_array[i], NORMAL_COLOR);
+        tmp = hit1.value_array[i];
+        if(tmp > THRESHOLD_VALUE) {
+            gl_draw_rect(bar_x_pos_array[i], 0, bar_width, y_tick*hit1.value_array[i], THRESHOLD_COLOR);
+        }
+        else {
+            gl_draw_rect(bar_x_pos_array[i], 0, bar_width, y_tick*hit1.value_array[i], NORMAL_COLOR);
+        }
         printf("sensor %d: %d  ", i, hit1.value_array[i]);
     }
     printf("\n");

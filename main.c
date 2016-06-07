@@ -48,8 +48,9 @@ static void main_init(){
     sensors_init();
     gpio_init();
     soundmaker_init(NUM_KEYS);
-    setup_interrupts();
     graph_init(WIDTH, HEIGHT, NUM_KEYS);
+    delay(5);
+    setup_interrupts();
 }
 
 void main(void) {
