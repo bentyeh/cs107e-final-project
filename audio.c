@@ -379,21 +379,23 @@ int audio_send_mix_wave(int freq1, int freq2, int volume){
     return 1;
   }
 
-  int wave_final[64];
+  float wave_final[64];
   int freq = gcd(freq1, freq2);
   int adjuster = 64 / (2 * MATH_PI * 64);
 
   for(int i = 0; i < 64; i++){
-    wave_final[i] = sin(freq1 * 2 * MATH_PI * adjuster) + sin(freq2 * 2 * MATH_PI * adjuster);
-    wave_final[i] = wave_final[i] * waveform_sine[i]; //multiply by the base sine wave provided by Phil
+    wave_final[i] = (float) sin(freq1 * 2 * MATH_PI * adjuster) + sin(freq2 * 2 * MATH_PI * adjuster);
+    wave_final[i] = (float) wave_final[i] * waveform_sine[i]; //multiply by the base sine wave provided by Phil
     adjuster += adjuster;
   }
   //shift all values up so there are no negative values
   int min = min_arr(wave_final, 64);
   for(int i = 0; i < 64; i++){
-    wave_final[i] += min;
+    wave_final[i] += (float) min;
   }
-
-  audio_send_wave( (unsigned) wave_final, freq, volume);
+  for(int i = 0; i < 64; i++){
+    printf("%d, ", wave_final[i]);
+  }
+  audio_send_wave( (unsigned int) wave_final, freq, volume);
   return 1;
 }

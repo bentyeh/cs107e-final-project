@@ -40,9 +40,9 @@ void graph_init(unsigned width, unsigned height, unsigned num_vars, unsigned thr
 
     // Clear the screen to the background color
     gl_clear(BACKGROUND_COLOR);
+    draw_threshold_line(threshold);
     gl_swap_buffer();
     gl_clear(BACKGROUND_COLOR);
-
     draw_threshold_line(threshold);
 }
 
