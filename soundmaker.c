@@ -33,8 +33,7 @@ static int stored_time;
 static int first_beat_time;
 int value = 0;
 
-// static hit_t *hit1;
-
+static hit_t oldhit;
 
 static int num_keys;
 // int *sensor_values;
@@ -111,9 +110,17 @@ void soundmaker_vector(unsigned pc) {
 	armtimer_clear_interrupt();
 
 	hit_t hit1;
+	int do_enqueue = 0;
 
 	for(int i = 0; i < num_keys; i++) {
 		hit1.value_array[i] = sensors_read_value(i);
+		if(!do_enqueue && hit1.value_array[i] != oldhit.value_array[i]) {
+			do_enqueue = 1;
+		}
 	}
-	cir_enqueue(cir_freeplay, hit1);
+	
+	if(do_enqueue) {
+		cir_enqueue(cir_freeplay, hit1);
+		oldhit = hit1;
+	}
 }

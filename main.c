@@ -19,6 +19,7 @@
 #define WIDTH 800
 #define HEIGHT 600
 #define NUM_KEYS 5
+#define SENSOR_THRESHOLD 30
 
 /* drumsssss */
 // #define KEY_A TOM_FREQ
@@ -48,9 +49,26 @@ static void main_init(){
     sensors_init();
     gpio_init();
     soundmaker_init(NUM_KEYS);
-    graph_init(WIDTH, HEIGHT, NUM_KEYS);
+    graph_init(WIDTH, HEIGHT, NUM_KEYS, SENSOR_THRESHOLD);
     delay(5);
     setup_interrupts();
+}
+
+void play_sounds(unsigned num_keys, hit_t hit1) {
+    int freq1, freq2;
+    freq1 = freq2 = 0;
+    for(int i = 0; i < num_keys; i++) {
+        if(hit1.value_array[i] > 0) {
+            if(freq1 == 0) {
+                freq1 = KEY_FREQ[i];
+            }
+            else if(freq2 == 0) {
+                freq2 = KEY_FREQ[i];
+                break;
+            }
+        }
+    }
+    audio_send_mix_wave(freq1, freq2, 800);
 }
 
 void main(void) {
@@ -58,8 +76,15 @@ void main(void) {
 
     while(1) {
         hit_t hit1 = cir_dequeue(cir_freeplay);
-        graph_values(NUM_KEYS, hit1);
-        // cir_clear(cir_freeplay);
+        graph_values(NUM_KEYS, hit1, SENSOR_THRESHOLD);
+
+        // play_sounds(NUM_KEYS, hit1);
+        for(int i = 0; i < NUM_KEYS; i++) {
+            if(hit1.value_array[i] > SENSOR_THRESHOLD) {
+                audio_send_tone(WAVE_SINE, 1000, 800);
+                break;
+            }
+        }
     }
 }
 

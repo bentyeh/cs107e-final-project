@@ -3,7 +3,7 @@
 #include "printf.h"
 #include "assert.h"
 
-#define CAPACITY 4096
+#define CAPACITY 128
 
 struct cir {
     hit_t buf[CAPACITY];

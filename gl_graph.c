@@ -17,7 +17,7 @@ const color BACKGROUND_COLOR = GL_WHITE;
 const color NORMAL_COLOR = GL_BLUE;
 const color THRESHOLD_COLOR = GL_RED;
 
-void graph_init(unsigned width, unsigned height, unsigned num_vars) {
+void graph_init(unsigned width, unsigned height, unsigned num_vars, unsigned threshold) {
 
     // Stores initialization arguments into global variables
     gl_width = width;
@@ -42,21 +42,25 @@ void graph_init(unsigned width, unsigned height, unsigned num_vars) {
     gl_clear(BACKGROUND_COLOR);
     gl_swap_buffer();
     gl_clear(BACKGROUND_COLOR);
+
+    draw_threshold_line(threshold);
 }
 
-void graph_values(int num_values, hit_t hit1) {
-    int i, tmp;
+void graph_values(int num_values, hit_t hit1, unsigned threshold) {
+    int i;
+    color c;
     for(i = 0; i < num_values; i++) {
-        tmp = hit1.value_array[i];
-        if(tmp > THRESHOLD_VALUE) {
-            gl_draw_rect(bar_x_pos_array[i], 0, bar_width, y_tick*hit1.value_array[i], THRESHOLD_COLOR);
-        }
-        else {
-            gl_draw_rect(bar_x_pos_array[i], 0, bar_width, y_tick*hit1.value_array[i], NORMAL_COLOR);
-        }
-        printf("sensor %d: %d  ", i, hit1.value_array[i]);
+        c = (hit1.value_array[i] >= threshold) ? THRESHOLD_COLOR : NORMAL_COLOR;
+        gl_draw_rect(bar_x_pos_array[i], 0, bar_width, y_tick*hit1.value_array[i], c);
+        // printf("sensor %d: %d  ", i, hit1.value_array[i]);
     }
-    printf("\n");
+    // printf("\n");
     gl_swap_buffer();
     gl_clear(BACKGROUND_COLOR);
+    draw_threshold_line(threshold);
+}
+
+void draw_threshold_line(unsigned threshold) {
+    int tmp = y_tick*threshold;
+    gl_draw_line(0, tmp, gl_width, tmp, THRESHOLD_COLOR);
 }
