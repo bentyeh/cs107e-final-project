@@ -1,6 +1,6 @@
 # ajahanso-bentyeh-ericscrum-project
 
-![alt-text](ajahanso-bentyeh-ericscrum-project/Screen Shot 2016-06-08 at 10.43.54 PM.png)
+![alt-text](https://github.com/cs107e/ajahanso-bentyeh-ericscrum-project/blob/master/Screen%20Shot%202016-06-08%20at%2010.43.54%20PM.png)
   
 ##Project Writeup
 
