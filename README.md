@@ -1,4 +1,6 @@
 # ajahanso-bentyeh-ericscrum-project
+
+![alt-text](ajahanso-bentyeh-ericscrum-project/Screen Shot 2016-06-08 at 10.43.54 PM.png)
   
 ##Project Writeup
 
